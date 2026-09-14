@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Order Receipt</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+        }
+
+        .receipt {
+            width: 90%;
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .success {
+            text-align: center;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .details {
+            margin-top: 25px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .total {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .buttons {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 20px;
+            margin: 5px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .orders {
+            background-color: #3498db;
+        }
+
+        .menu {
+            background-color: #27ae60;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="receipt">
+
+        <h1>🧾 Order Receipt</h1>
+
+        <p class="success">
+            🎉 Order Details
+        </p>
+
+        <div class="details">
+
+            <div class="row">
+                <span class="label">Order ID</span>
+                <span>#{{ order[0] }}</span>
+            </div>
+
+            <div class="row">
+                <span class="label">Student Email</span>
+                <span>{{ order[1] }}</span>
+            </div>
+
+            <div class="row">
+                <span class="label">Food Item</span>
+                <span>🍔 {{ order[2] }}</span>
+            </div>
+
+            <div class="row">
+                <span class="label">Price</span>
+                <span>₹{{ "%.2f"|format(order[3]) }}</span>
+            </div>
+
+            <div class="row">
+                <span class="label">Quantity</span>
+                <span>{{ order[4] }}</span>
+            </div>
+
+            <div class="row total">
+                <span>Total</span>
+                <span>₹{{ "%.2f"|format(order[5]) }}</span>
+            </div>
+
+            <div class="row">
+                <span class="label">Status</span>
+                <span>{{ order[6] }}</span>
+            </div>
+
+            <div class="row">
+                <span class="label">Order Date</span>
+                <span>{{ order[7] }}</span>
+            </div>
+
+        </div>
+
+        <div class="buttons">
+
+            <a href="/my_orders" class="button orders">
+                📋 My Orders
+            </a>
+
+            <a href="/menu" class="button menu">
+                🍔 Back to Menu
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
