@@ -13,13 +13,17 @@ app.secret_key = "smart_canteen_secret_key"
 # MYSQL DATABASE CONNECTION
 # =========================
 
+import os
+import pymysql
+
 db = pymysql.connect(
-    host="127.0.0.1",
-    port=3307,
-    user="root",
-    password="",
-    database="canteen_db",
-    connect_timeout=5
+    host=os.environ.get("DB_HOST"),
+    port=int(os.environ.get("DB_PORT", 12855)),
+    user=os.environ.get("DB_USER"),
+    password=os.environ.get("DB_PASSWORD"),
+    database=os.environ.get("DB_NAME", "defaultdb"),
+    connect_timeout=10,
+    ssl={"ssl": {}}
 )
 
 
