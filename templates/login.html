@@ -1,36 +1,217 @@
+```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Smart Canteen - Login</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            padding: 20px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        .logo {
+            width: 75px;
+            height: 75px;
+            margin: 0 auto 15px;
+            background: #ff7a00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+        }
+
+        h2 {
+            color: #222;
+            font-size: 26px;
+            margin-bottom: 6px;
+        }
+
+        .welcome {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        h3 {
+            color: #ff7a00;
+            font-size: 20px;
+            margin-bottom: 22px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            color: #444;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #ff7a00;
+            box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.12);
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 9px;
+            background: #ff7a00;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #e86f00;
+            transform: translateY(-1px);
+        }
+
+        .register {
+            margin-top: 22px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .register a {
+            color: #ff7a00;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .register a:hover {
+            text-decoration: underline;
+        }
+
+        .home {
+            display: inline-block;
+            margin-top: 18px;
+            color: #777;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .home:hover {
+            color: #ff7a00;
+        }
+
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 28px 22px;
+            }
+
+            h2 {
+                font-size: 23px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <h2>Smart Canteen Management System</h2>
+    <div class="login-box">
 
-    <h3>Student Login</h3>
+        <div class="logo">
+            🍔
+        </div>
 
-    <form method="POST" action="/login">
+        <h2>Smart Canteen</h2>
 
-        <label>Email:</label><br>
-        <input type="email" name="email" required>
+        <p class="welcome">
+            Welcome back! Please login to continue.
+        </p>
 
-        <br><br>
+        <h3>Student Login</h3>
 
-        <label>Password:</label><br>
-        <input type="password" name="password" required>
+        <form method="POST" action="/login">
 
-        <br><br>
+            <div class="form-group">
+                <label for="email">Email Address</label>
 
-        <button type="submit">Login</button>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                >
+            </div>
 
-    </form>
+            <div class="form-group">
+                <label for="password">Password</label>
 
-    <br>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                >
+            </div>
 
-    <a href="/register">
-        Don't have an account? Register
-    </a>
+            <button type="submit">
+                Login
+            </button>
+
+        </form>
+
+        <div class="register">
+            Don't have an account?
+            <a href="/register">Register</a>
+        </div>
+
+        <a href="/" class="home">
+            ← Back to Home
+        </a>
+
+    </div>
 
 </body>
+
 </html>
+```
