@@ -35,14 +35,182 @@ db = pymysql.connect(
 def home():
 
     return """
-        <h1>🍔 Smart Canteen Food Ordering System</h1>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <p>Database Connected Successfully!</p>
+        <title>Smart Canteen - Home</title>
 
-        <a href="/register">Register</a>
-        <br><br>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: Arial, sans-serif;
+            }
 
-        <a href="/login">Login</a>
+            body {
+                min-height: 100vh;
+                background: linear-gradient(135deg, #fff3e0, #ffcc80);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 500px;
+                background: white;
+                padding: 45px 35px;
+                border-radius: 20px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+                text-align: center;
+            }
+
+            .logo {
+                font-size: 70px;
+                margin-bottom: 10px;
+            }
+
+            h1 {
+                color: #e65100;
+                font-size: 30px;
+                margin-bottom: 12px;
+            }
+
+            .subtitle {
+                color: #555;
+                font-size: 16px;
+                margin-bottom: 25px;
+                line-height: 1.5;
+            }
+
+            .status {
+                display: inline-block;
+                background: #e8f5e9;
+                color: #2e7d32;
+                padding: 8px 15px;
+                border-radius: 20px;
+                font-size: 14px;
+                margin-bottom: 30px;
+                font-weight: bold;
+            }
+
+            .buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .btn {
+                display: block;
+                width: 100%;
+                padding: 14px;
+                border-radius: 10px;
+                text-decoration: none;
+                font-size: 17px;
+                font-weight: bold;
+                transition: 0.3s;
+            }
+
+            .register {
+                background: #ff6f00;
+                color: white;
+            }
+
+            .register:hover {
+                background: #e65100;
+                transform: translateY(-2px);
+            }
+
+            .login {
+                background: white;
+                color: #e65100;
+                border: 2px solid #ff6f00;
+            }
+
+            .login:hover {
+                background: #fff3e0;
+                transform: translateY(-2px);
+            }
+
+            .features {
+                margin-top: 30px;
+                padding-top: 25px;
+                border-top: 1px solid #eee;
+                color: #666;
+                font-size: 14px;
+                line-height: 1.8;
+            }
+
+            .footer {
+                margin-top: 25px;
+                color: #999;
+                font-size: 12px;
+            }
+
+            @media (max-width: 480px) {
+                .container {
+                    padding: 35px 25px;
+                }
+
+                h1 {
+                    font-size: 26px;
+                }
+
+                .logo {
+                    font-size: 60px;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <div class="container">
+
+            <div class="logo">🍔</div>
+
+            <h1>Smart Canteen</h1>
+
+            <p class="subtitle">
+                Food Ordering & Management System
+            </p>
+
+            <div class="status">
+                ✓ Database Connected Successfully!
+            </div>
+
+            <div class="buttons">
+
+                <a href="/register" class="btn register">
+                    📝 Create Account
+                </a>
+
+                <a href="/login" class="btn login">
+                    🔐 Login
+                </a>
+
+            </div>
+
+            <div class="features">
+                🍔 Easy Food Ordering<br>
+                🛒 Simple Cart Management<br>
+                📋 Track Your Orders<br>
+                ⚡ Fast & Convenient
+            </div>
+
+            <div class="footer">
+                Smart Canteen Management System
+            </div>
+
+        </div>
+
+    </body>
+    </html>
     """
 
 
