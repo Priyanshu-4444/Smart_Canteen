@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
 
@@ -68,6 +69,17 @@
             border-bottom: 1px solid #ddd;
         }
 
+        .token {
+            display: inline-block;
+            background-color: #fff3cd;
+            color: #856404;
+            border: 2px solid #f1c40f;
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
         .pending {
             color: #f39c12;
             font-weight: bold;
@@ -92,29 +104,54 @@
             text-align: center;
             padding: 40px;
         }
+
         .summary-box {
-    background-color: white;
-    padding: 18px 25px;
-    margin: 20px auto;
-    width: 90%;
-    max-width: 1100px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
+            background-color: white;
+            padding: 18px 25px;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 1100px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
 
-.summary-box h3 {
-    margin: 0 0 8px 0;
-    color: #2c3e50;
-}
+        .summary-box h3 {
+            margin: 0 0 8px 0;
+            color: #2c3e50;
+        }
 
-.summary-box p {
-    margin: 0;
-    color: #666;
-}
-.status.cancelled {
-    background-color: #f8d7da;
-    color: #842029;
-} 
+        .summary-box p {
+            margin: 0;
+            color: #666;
+        }
+
+        .status.cancelled {
+            background-color: #f8d7da;
+            color: #842029;
+        }
+
+        .receipt-button {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .cancel-button {
+            padding: 8px 12px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .cancel-button:hover {
+            background-color: #c0392b;
+        }
 
     </style>
 
@@ -133,28 +170,26 @@
     </div>
 
 
+    <div class="summary-box">
 
-<div class="summary-box">
+        <h3>📊 Order Summary</h3>
 
-    <h3>📊 Order Summary</h3>
-
-    <p>Your previous orders are listed below.</p>
-
-</div>
-
-
-<div class="container">
-
-
-    <div class="top-bar">
-
-        <a href="/menu" class="back-button">
-            🍔 Back to Menu
-        </a>
+        <p>Your previous orders are listed below.</p>
 
     </div>
 
-    
+
+    <div class="container">
+
+
+        <div class="top-bar">
+
+            <a href="/menu" class="back-button">
+                🍔 Back to Menu
+            </a>
+
+        </div>
+
 
         <div class="table-box">
 
@@ -169,15 +204,22 @@
                 <tr>
 
                     <th>Order ID</th>
-<th>Food Item</th>
-<th>Price</th>
-<th>Quantity</th>
-<th>Total</th>
-<th>Status</th>
-<th>Date</th>
-<th>Receipt</th>
 
-            
+                    <th>Token</th>
+
+                    <th>Food Item</th>
+
+                    <th>Price</th>
+
+                    <th>Quantity</th>
+
+                    <th>Total</th>
+
+                    <th>Status</th>
+
+                    <th>Date</th>
+
+                    <th>Receipt</th>
 
                 </tr>
 
@@ -191,55 +233,71 @@
                         #{{ order[0] }}
                     </td>
 
-                    <td>
-                        🍔 {{ order[2] }}
-                    </td>
 
                     <td>
-                        ₹{{ order[3] }}
-                    </td>
 
-                    <td>
-                        {{ order[4] }}
-                    </td>
+                        <span class="token">
+                            🎫 {{ order[1] }}
+                        </span>
 
-                    <td>
-                        <strong>₹{{ order[5] }}</strong>
                     </td>
 
 
                     <td>
+                        🍔 {{ order[3] }}
+                    </td>
 
-                        {% if order[6] == "Pending" %}
+
+                    <td>
+                        ₹{{ order[4] }}
+                    </td>
+
+
+                    <td>
+                        {{ order[5] }}
+                    </td>
+
+
+                    <td>
+                        <strong>₹{{ order[6] }}</strong>
+                    </td>
+
+
+                    <td>
+
+                        {% if order[7] == "Pending" %}
 
                             <span class="pending">
                                 ⏳ Pending
                             </span>
 
-                        {% elif order[6] == "Preparing" %}
+                        {% elif order[7] == "Preparing" %}
 
                             <span class="preparing">
                                 👨‍🍳 Preparing
                             </span>
 
-                        {% elif order[6] == "Ready" %}
+                        {% elif order[7] == "Ready" %}
 
                             <span class="ready">
                                 ✅ Ready
                             </span>
 
-                        {% elif order[6] == "Completed" %}
+                        {% elif order[7] == "Completed" %}
 
                             <span class="completed">
                                 🎉 Completed
                             </span>
 
-                            {% elif order[6] == "Cancelled" %}
-    <span class="status cancelled">❌ Cancelled</span>
+                        {% elif order[7] == "Cancelled" %}
+
+                            <span class="status cancelled">
+                                ❌ Cancelled
+                            </span>
 
                         {% else %}
 
-                            {{ order[6] }}
+                            {{ order[7] }}
 
                         {% endif %}
 
@@ -247,67 +305,79 @@
 
 
                     <td>
-                        {{ order[7] }}
+                        {{ order[8] }}
                     </td>
+
+
                     <td>
-    <a href="/receipt/{{ order[0] }}" class="receipt-button">
-    🧾 View Receipt
-</a>
 
-{% if order[6] == "Pending" %}
+                        <a
+                            href="/receipt/{{ order[0] }}"
+                            class="receipt-button"
+                        >
+                            🧾 View Receipt
+                        </a>
 
-    <form
-        method="POST"
-        action="/cancel_order/{{ order[0] }}"
-        style="display: inline;"
-        onsubmit="return confirm('Are you sure you want to cancel this order?');"
-    >
 
-        <button
-            type="submit"
-            class="cancel-button"
-        >
-            ❌ Cancel Order
-        </button>
+                        {% if order[7] == "Pending" %}
 
-    </form>
+                            <form
+                                method="POST"
+                                action="/cancel_order/{{ order[0] }}"
+                                style="display: inline;"
+                                onsubmit="return confirm('Are you sure you want to cancel this order?');"
+                            >
 
-{% endif %}
+                                <button
+                                    type="submit"
+                                    class="cancel-button"
+                                >
+                                    ❌ Cancel Order
+                                </button>
 
-</td>
+                            </form>
 
-</tr>
+                        {% endif %}
 
-{% endfor %}
+                    </td>
 
-</table>
+                </tr>
 
-{% else %}
 
-<div class="empty">
+                {% endfor %}
 
-    <h2>
-        😔 No Orders Yet
-    </h2>
+            </table>
 
-    <p>
-        You haven't placed any orders yet.
-    </p>
 
-    <br>
+            {% else %}
 
-    <a href="/menu" class="back-button">
-        🍔 Order Food
-    </a>
 
-</div>
+            <div class="empty">
 
-{% endif %}
+                <h2>
+                    😔 No Orders Yet
+                </h2>
 
-</div>
+                <p>
+                    You haven't placed any orders yet.
+                </p>
 
-</div>
+                <br>
+
+                <a href="/menu" class="back-button">
+                    🍔 Order Food
+                </a>
+
+            </div>
+
+
+            {% endif %}
+
+        </div>
+
+    </div>
 
 </body>
 
 </html>
+```

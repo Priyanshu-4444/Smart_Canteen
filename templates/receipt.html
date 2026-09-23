@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
 
@@ -34,6 +35,29 @@
             font-weight: bold;
         }
 
+        .token-box {
+            text-align: center;
+            background-color: #fff3cd;
+            border: 2px solid #f1c40f;
+            border-radius: 10px;
+            padding: 18px;
+            margin: 25px 0;
+        }
+
+        .token-label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        .token {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            letter-spacing: 3px;
+        }
+
         .details {
             margin-top: 25px;
         }
@@ -43,6 +67,7 @@
             justify-content: space-between;
             padding: 12px 0;
             border-bottom: 1px solid #ddd;
+            gap: 15px;
         }
 
         .label {
@@ -92,6 +117,24 @@
             🎉 Order Details
         </p>
 
+
+        <div class="token-box">
+
+            <div class="token-label">
+                🎫 DIGITAL TOKEN
+            </div>
+
+            <div class="token">
+                {{ order[1] }}
+            </div>
+
+            <div>
+                Show this token at the canteen counter.
+            </div>
+
+        </div>
+
+
         <div class="details">
 
             <div class="row">
@@ -101,40 +144,41 @@
 
             <div class="row">
                 <span class="label">Student Email</span>
-                <span>{{ order[1] }}</span>
+                <span>{{ order[2] }}</span>
             </div>
 
             <div class="row">
                 <span class="label">Food Item</span>
-                <span>🍔 {{ order[2] }}</span>
+                <span>🍔 {{ order[3] }}</span>
             </div>
 
             <div class="row">
                 <span class="label">Price</span>
-                <span>₹{{ "%.2f"|format(order[3]) }}</span>
+                <span>₹{{ "%.2f"|format(order[4]) }}</span>
             </div>
 
             <div class="row">
                 <span class="label">Quantity</span>
-                <span>{{ order[4] }}</span>
+                <span>{{ order[5] }}</span>
             </div>
 
             <div class="row total">
                 <span>Total</span>
-                <span>₹{{ "%.2f"|format(order[5]) }}</span>
+                <span>₹{{ "%.2f"|format(order[6]) }}</span>
             </div>
 
             <div class="row">
                 <span class="label">Status</span>
-                <span>{{ order[6] }}</span>
+                <span>{{ order[7] }}</span>
             </div>
 
             <div class="row">
                 <span class="label">Order Date</span>
-                <span>{{ order[7] }}</span>
+                <span>{{ order[8] }}</span>
             </div>
 
         </div>
+
 
         <div class="buttons">
 
@@ -153,3 +197,4 @@
 </body>
 
 </html>
+```

@@ -57,6 +57,15 @@
     .logout {
         background-color: #e74c3c;
     }
+    .token {
+    display: inline-block;
+    background-color: #fff3cd;
+    color: #856404;
+    border: 2px solid #f1c40f;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-weight: bold;
+}
 
     /* Statistics */
 
@@ -441,23 +450,15 @@
                 <tr>
 
                     <th>Order ID</th>
-
-                    <th>Student Email</th>
-
-                    <th>Food Item</th>
-
-                    <th>Price</th>
-
-                    <th>Quantity</th>
-
-                    <th>Total</th>
-
-                    <th>Status</th>
-
-                    <th>Date & Time</th>
-
-                    <th>Action</th>
-
+<th>Token</th>
+<th>Student Email</th>
+<th>Food Item</th>
+<th>Price</th>
+<th>Quantity</th>
+<th>Total</th>
+<th>Status</th>
+<th>Date & Time</th>
+<th>Action</th>
                 </tr>
 
             </thead>
@@ -467,137 +468,138 @@
 
                 {% for order in orders %}
 
+               <tr>
+
+    <td>
+        #{{ order[0] }}
+    </td>
+
+    <td>
+        <span class="token">
+            🎫 {{ order[1] }}
+        </span>
+    </td>
+
+    <td>
+        {{ order[2] }}
+    </td>
+
+    <td>
+        {{ order[3] }}
+    </td>
+
+    <td>
+        ₹{{ "%.2f"|format(order[4]) }}
+    </td>
+
+    <td>
+        {{ order[5] }}
+    </td>
+
+    <td>
+        ₹{{ "%.2f"|format(order[6]) }}
+    </td>
+
+    <td>
+
+        {% if order[7] == "Pending" %}
+
+            <span class="status pending">
+                ⏳ Pending
+            </span>
+
+        {% elif order[7] == "Preparing" %}
+
+            <span class="status preparing">
+                👨‍🍳 Preparing
+            </span>
+
+        {% elif order[7] == "Ready" %}
+
+            <span class="status ready">
+                🟢 Ready
+            </span>
+
+        {% elif order[7] == "Completed" %}
+
+            <span class="status completed">
+                ✅ Completed
+            </span>
+
+        {% elif order[7] == "Cancelled" %}
+
+            <span class="status cancelled">
+                ❌ Cancelled
+            </span>
+
+        {% else %}
+
+            <span class="status">
+                {{ order[7] }}
+            </span>
+
+        {% endif %}
+
+    </td>
+
+    <td>
+        {{ order[8] }}
+    </td>
+
+    <td>
+
+        <form
+            method="POST"
+            action="/update_order"
+            style="display: flex; gap: 8px; align-items: center; justify-content: center;"
+        >
+
+            <input
+                type="hidden"
+                name="order_id"
+                value="{{ order[0] }}"
+            >
+
+            <select name="status">
+
+                <option value="Pending"
+                {% if order[7] == "Pending" %}selected{% endif %}>
+                    ⏳ Pending
+                </option>
+
+                <option value="Preparing"
+                {% if order[7] == "Preparing" %}selected{% endif %}>
+                    👨‍🍳 Preparing
+                </option>
+
+                <option value="Ready"
+                {% if order[7] == "Ready" %}selected{% endif %}>
+                    🟢 Ready
+                </option>
+
+                <option value="Completed"
+                {% if order[7] == "Completed" %}selected{% endif %}>
+                    ✅ Completed
+                </option>
+
+            </select>
+
+            <button
+                type="submit"
+                style="background-color: #3498db; color: white; border: none; border-radius: 5px;"
+            >
+                Update
+            </button>
+
+        </form>
+
+    </td>
+
+</tr>                {% else %}
+
                 <tr>
 
-                    <td>
-                        #{{ order[0] }}
-                    </td>
-
-                    <td>
-                        {{ order[1] }}
-                    </td>
-
-                    <td>
-                        {{ order[2] }}
-                    </td>
-
-                    <td>
-                        ₹{{ "%.2f"|format(order[3]) }}
-                    </td>
-
-                    <td>
-                        {{ order[4] }}
-                    </td>
-
-                    <td>
-                        ₹{{ "%.2f"|format(order[5]) }}
-                    </td>
-
-
-                    <td>
-
-                        {% if order[6] == "Pending" %}
-
-                            <span class="status pending">
-                                ⏳ Pending
-                            </span>
-
-                        {% elif order[6] == "Preparing" %}
-
-                            <span class="status preparing">
-                                👨‍🍳 Preparing
-                            </span>
-
-                        {% elif order[6] == "Ready" %}
-
-                            <span class="status ready">
-                                🟢 Ready
-                            </span>
-
-                        {% elif order[6] == "Completed" %}
-
-                            <span class="status completed">
-                                ✅ Completed
-                            </span>
-
-                        {% elif order[6] == "Cancelled" %}
-
-                            <span class="status cancelled">
-                                ❌ Cancelled
-                            </span>
-
-                        {% else %}
-
-                            <span class="status">
-                                {{ order[6] }}
-                            </span>
-
-                        {% endif %}
-
-                    </td>
-
-
-                    <td>
-                        {{ order[7] }}
-                    </td>
-
-
-                    <td>
-
-                        <form
-                            method="POST"
-                            action="/update_order"
-                            style="display: flex; gap: 8px; align-items: center; justify-content: center;"
-                        >
-
-                            <input
-                                type="hidden"
-                                name="order_id"
-                                value="{{ order[0] }}"
-                            >
-
-                            <select name="status">
-
-                                <option value="Pending"
-                                {% if order[6] == "Pending" %}selected{% endif %}>
-                                    ⏳ Pending
-                                </option>
-
-                                <option value="Preparing"
-                                {% if order[6] == "Preparing" %}selected{% endif %}>
-                                    👨‍🍳 Preparing
-                                </option>
-
-                                <option value="Ready"
-                                {% if order[6] == "Ready" %}selected{% endif %}>
-                                    🟢 Ready
-                                </option>
-
-                                <option value="Completed"
-                                {% if order[6] == "Completed" %}selected{% endif %}>
-                                    ✅ Completed
-                                </option>
-
-                            </select>
-
-                            <button
-                                type="submit"
-                                style="background-color: #3498db; color: white; border: none; border-radius: 5px;"
-                            >
-                                Update
-                            </button>
-
-                        </form>
-
-                    </td>
-
-                </tr>
-
-                {% else %}
-
-                <tr>
-
-                    <td colspan="9">
+                    <td colspan="10">
                         No orders found.
                     </td>
 

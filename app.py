@@ -26,7 +26,6 @@ db = pymysql.connect(
     ssl={"ssl": {}}
 )
 
-
 # =========================
 # HOME PAGE
 # =========================
@@ -318,6 +317,7 @@ def login():
             """
 
     return render_template("login.html")
+
 
 
 # =========================
@@ -615,12 +615,27 @@ def checkout():
             <a href="/menu">Go to Menu</a>
         """
 
-    # Add every cart item to orders
+        # Generate a unique token for today's order
+    cursor.execute(
+        """
+        SELECT COUNT(DISTINCT token)
+        FROM orders
+        WHERE DATE(order_date) = CURDATE()
+        AND token IS NOT NULL
+        """
+    )
+
+    today_tokens = cursor.fetchone()[0]
+    token_number = today_tokens + 1
+    token = f"A{token_number:03d}"
+
+    # Add every cart item to orders using the same token
     for item in cart_items:
         cursor.execute(
             """
             INSERT INTO orders
             (
+                token,
                 student_email,
                 item_name,
                 price,
@@ -635,10 +650,12 @@ def checkout():
                 %s,
                 %s,
                 %s,
+                %s,
                 %s
             )
             """,
             (
+                token,
                 student_email,
                 item[2],
                 item[3],
@@ -647,7 +664,6 @@ def checkout():
                 "Pending"
             )
         )
-
     # Empty the cart
     cursor.execute(
         """
@@ -660,39 +676,155 @@ def checkout():
     db.commit()
     cursor.close()
 
-    return """
-        <html>
+    return f"""
+        <!DOCTYPE html>
+        <html lang="en">
+
         <head>
-            <title>Order Successful</title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+            <title>Order Successful - Smart Canteen</title>
+
+            <style>
+                * {{
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                    font-family: Arial, sans-serif;
+                }}
+
+                body {{
+                    min-height: 100vh;
+                    background: linear-gradient(135deg, #fff3e0, #ffcc80);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 20px;
+                }}
+
+                .container {{
+                    width: 100%;
+                    max-width: 500px;
+                    background: white;
+                    padding: 40px 30px;
+                    border-radius: 20px;
+                    text-align: center;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+                }}
+
+                .success {{
+                    font-size: 55px;
+                    margin-bottom: 10px;
+                }}
+
+                h1 {{
+                    color: #2e7d32;
+                    margin-bottom: 10px;
+                }}
+
+                .message {{
+                    color: #555;
+                    margin-bottom: 25px;
+                }}
+
+                .token-box {{
+                    background: #fff3e0;
+                    border: 2px dashed #ff6f00;
+                    border-radius: 15px;
+                    padding: 20px;
+                    margin: 20px 0;
+                }}
+
+                .token-label {{
+                    color: #777;
+                    font-size: 14px;
+                    margin-bottom: 5px;
+                }}
+
+                .token {{
+                    color: #e65100;
+                    font-size: 42px;
+                    font-weight: bold;
+                    letter-spacing: 4px;
+                }}
+
+                .status {{
+                    display: inline-block;
+                    background: #fff8e1;
+                    color: #f57c00;
+                    padding: 8px 18px;
+                    border-radius: 20px;
+                    font-weight: bold;
+                    margin-bottom: 25px;
+                }}
+
+                .btn {{
+                    display: block;
+                    text-decoration: none;
+                    padding: 13px;
+                    border-radius: 10px;
+                    margin-top: 12px;
+                    font-weight: bold;
+                }}
+
+                .orders {{
+                    background: #ff6f00;
+                    color: white;
+                }}
+
+                .menu {{
+                    border: 2px solid #ff6f00;
+                    color: #e65100;
+                }}
+
+                .dashboard {{
+                    color: #666;
+                }}
+            </style>
         </head>
 
         <body>
 
-            <h1>🎉 Order Placed Successfully!</h1>
+            <div class="container">
 
-            <p>Your order has been sent to the canteen.</p>
+                <div class="success">🎉</div>
 
-            <p>
-                <strong>Status:</strong> Pending
-            </p>
+                <h1>Order Placed Successfully!</h1>
 
-            <br>
+                <p class="message">
+                    Your order has been sent to the canteen.
+                </p>
 
-            <a href="/my_orders">
-                📋 View My Orders
-            </a>
+                <div class="token-box">
 
-            <br><br>
+                    <div class="token-label">
+                        Your Digital Token
+                    </div>
 
-            <a href="/menu">
-                🍔 Back to Menu
-            </a>
+                    <div class="token">
+                        {token}
+                    </div>
 
-            <br><br>
+                </div>
 
-            <a href="/dashboard">
-                🏠 Dashboard
-            </a>
+                <div class="status">
+                    🕐 Pending
+                </div>
+
+                <a href="/my_orders" class="btn orders">
+                    📋 View My Orders
+                </a>
+
+                <a href="/menu" class="btn menu">
+                    🍔 Back to Menu
+                </a>
+
+                <a href="/dashboard" class="btn dashboard">
+                    🏠 Dashboard
+                </a>
+
+            </div>
 
         </body>
         </html>
@@ -1540,6 +1672,7 @@ def sales_report():
         todays_revenue=todays_revenue,
         todays_orders=todays_orders
     )
+
 
 # =========================
 # RUN APPLICATION
