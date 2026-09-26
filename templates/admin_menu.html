@@ -147,10 +147,39 @@
                     <td>
                         ₹{{ item[2] }}
                     </td>
+<td>
 
-                    <td>
-                        {{ item[3] }}
-                    </td>
+    {% if item[3] == "South Indian" %}
+
+        🍛 South Indian
+
+    {% elif item[3] == "Snacks" %}
+
+        🥪 Snacks & Chaat
+
+    {% elif item[3] == "Beverage" %}
+
+        🥤 Beverages
+
+    {% elif item[3] == "Lunch" %}
+
+        🍱 Lunch & Thali
+
+    {% elif item[3] == "Fast Food" %}
+
+        🍜 Chinese & Fast Food
+
+    {% elif item[3] == "Dessert" %}
+
+        🍰 Desserts & Bakery
+
+    {% else %}
+
+        {{ item[3] }}
+
+    {% endif %}
+
+</td>
 
                     <td>
 

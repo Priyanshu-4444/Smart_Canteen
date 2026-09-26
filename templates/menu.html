@@ -59,6 +59,53 @@
             margin-left: 5px;
         }
 
+        /* CATEGORY SECTION */
+
+        .categories {
+            max-width: 1100px;
+            margin: 25px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .categories h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .category-btn {
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 20px;
+            background: #f1f3f5;
+            color: #333;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .category-btn:hover {
+            background: #007bff;
+            color: white;
+        }
+
+        .all-category {
+            background: #007bff;
+            color: white;
+        }
+
+        /* MENU CARDS */
+
         .menu-container {
             max-width: 1100px;
             margin: 30px auto;
@@ -130,8 +177,52 @@
 
     <h1>🍔 Canteen Menu</h1>
 
+
+    <!-- CATEGORY BUTTONS -->
+
+    <div class="categories">
+
+        <h2>🍽️ Food Categories</h2>
+
+        <div class="category-buttons">
+
+            <a href="/menu" class="category-btn all-category">
+                🍽️ All
+            </a>
+
+            <a href="/menu?category=South%20Indian" class="category-btn">
+                🍛 South Indian
+            </a>
+
+            <a href="/menu?category=Snacks" class="category-btn">
+                🥪 Snacks & Chaat
+            </a>
+
+            <a href="/menu?category=Beverage" class="category-btn">
+                🥤 Beverages
+            </a>
+
+            <a href="/menu?category=Lunch" class="category-btn">
+                🍱 Lunch & Thali
+            </a>
+
+            <a href="/menu?category=Fast%20Food" class="category-btn">
+                🍜 Chinese & Fast Food
+            </a>
+
+            <a href="/menu?category=Dessert" class="category-btn">
+                🍰 Desserts & Bakery
+            </a>
+
+        </div>
+
+    </div>
+
+
     <!-- SEARCH AND FILTER -->
+
     <div class="top-bar">
+
         <div class="search-box">
 
             <form method="GET" action="/menu">
@@ -144,9 +235,11 @@
                 >
 
                 <select name="category">
+
                     <option value="">All Categories</option>
 
                     {% for category in categories %}
+
                         <option
                             value="{{ category[0] }}"
                             {% if selected_category == category[0] %}
@@ -155,12 +248,13 @@
                         >
                             {{ category[0] }}
                         </option>
+
                     {% endfor %}
 
                 </select>
 
                 <button type="submit" class="search-btn">
-                    Search
+                    🔍 Search
                 </button>
 
                 <a href="/menu" class="clear-btn">
@@ -170,10 +264,12 @@
             </form>
 
         </div>
+
     </div>
 
 
     <!-- MENU ITEMS -->
+
     <div class="menu-container">
 
         {% if items %}
@@ -192,41 +288,44 @@
                         Category: {{ item[3] }}
                     </p>
 
-                   <form method="POST" action="/add_to_cart">
 
-    <input
-        type="hidden"
-        name="item_name"
-        value="{{ item[1] }}"
-    >
+                    <!-- ADD TO CART -->
 
-    <input
-        type="hidden"
-        name="price"
-        value="{{ item[2] }}"
-    >
+                    <form method="POST" action="/add_to_cart">
 
-    <label>
-        Quantity:
-    </label>
+                        <input
+                            type="hidden"
+                            name="item_name"
+                            value="{{ item[1] }}"
+                        >
 
-    <select name="quantity" class="quantity">
+                        <input
+                            type="hidden"
+                            name="price"
+                            value="{{ item[2] }}"
+                        >
 
-        {% for i in range(1, 11) %}
-            <option value="{{ i }}">
-                {{ i }}
-            </option>
-        {% endfor %}
+                        <label>
+                            Quantity:
+                        </label>
 
-    </select>
+                        <select name="quantity" class="quantity">
 
-    <br>
+                            {% for i in range(1, 11) %}
 
-    <button type="submit" class="order-btn">
-        🛒 Add to Cart
-    </button>
+                                <option value="{{ i }}">
+                                    {{ i }}
+                                </option>
 
-</form>
+                            {% endfor %}
+
+                        </select>
+
+                        <br>
+
+                        <button type="submit" class="order-btn">
+                            🛒 Add to Cart
+                        </button>
 
                     </form>
 
@@ -237,8 +336,13 @@
         {% else %}
 
             <div class="no-items">
+
                 <h2>😕 No food items found</h2>
-                <p>Try another food name or category.</p>
+
+                <p>
+                    Try another food name or category.
+                </p>
+
             </div>
 
         {% endif %}
@@ -247,22 +351,26 @@
 
 
     <!-- BOTTOM LINKS -->
+
     <div class="bottom-links">
 
-    <a href="/cart">
-        🛒 View Cart
-    </a>
+        <a href="/cart">
+            🛒 View Cart
+        </a>
 
-    <a href="/dashboard">
-        🏠 Dashboard
-    </a>
+        <a href="/dashboard">
+            🏠 Dashboard
+        </a>
 
-    <a href="/my_orders">
-        📋 My Orders
-    </a>
+        <a href="/my_orders">
+            📋 My Orders
+        </a>
 
-    <a href="/logout">
-        🚪 Logout
-    </a>
+        <a href="/logout">
+            🚪 Logout
+        </a>
 
-</div>
+    </div>
+
+</body>
+</html>
