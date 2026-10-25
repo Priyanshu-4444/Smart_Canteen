@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, g
 import pymysql
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -19,31 +19,65 @@ import pymysql
 import os
 import pymysql
 
-db = pymysql.connect(
-    host=os.environ.get("DB_HOST", "127.0.0.1"),
-    port=int(os.environ.get("DB_PORT", 3307)),
-    user=os.environ.get("DB_USER", "root"),
-    password=os.environ.get("DB_PASSWORD", ""),
-    database=os.environ.get("DB_NAME", "canteen_db"),
-    connect_timeout=10,
-    ssl={"ssl": {}}
-)
+def get_db_connection():
+    db_host = os.environ.get("DB_HOST", "127.0.0.1")
+
+    db_config = {
+        "host": db_host,
+        "port": int(os.environ.get("DB_PORT", 3307)),
+        "user": os.environ.get("DB_USER", "root"),
+        "password": os.environ.get("DB_PASSWORD", ""),
+        "database": os.environ.get("DB_NAME", "canteen_db"),
+        "connect_timeout": 10,
+        "cursorclass": pymysql.cursors.Cursor
+    }
+
+    # Enable SSL when connecting to the online Aiven database
+    if db_host != "127.0.0.1" and db_host != "localhost":
+        db_config["ssl"] = {"ssl": {}}
+
+    return pymysql.connect(**db_config)
+
+# =========================
+# SHARED DATABASE CONNECTION
+# =========================
+
+class DatabaseProxy:
+    def get_connection(self):
+        if "db_connection" not in g:
+            g.db_connection = get_db_connection()
+        return g.db_connection
+
+    def __getattr__(self, name):
+        return getattr(self.get_connection(), name)
+
+
+# Existing routes can continue using db.cursor(), db.commit(), etc.
+db = DatabaseProxy()
+
+
+@app.teardown_appcontext
+def close_db_connection(exception=None):
+    connection = g.pop("db_connection", None)
+
+    if connection is not None:
+        connection.close()
+
 
 # =========================
 # HOME PAGE
 # =========================
 
+
 @app.route("/")
 def home():
-
     return """
     <!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <title>Smart Canteen - Home</title>
+        <title>Smart Canteen | Fresh Food, Fast Service</title>
 
         <style>
             * {
@@ -53,118 +87,371 @@ def home():
                 font-family: Arial, sans-serif;
             }
 
+            :root {
+                --orange: #f97316;
+                --dark: #25251f;
+                --cream: #fffaf2;
+                --muted: #716d65;
+            }
+
             body {
-                min-height: 100vh;
-                background: linear-gradient(135deg, #fff3e0, #ffcc80);
+                background: var(--cream);
+                color: var(--dark);
+                line-height: 1.6;
+            }
+
+            a {
+                text-decoration: none;
+            }
+
+            .navbar {
+                min-height: 76px;
+                padding: 15px 7%;
                 display: flex;
-                justify-content: center;
+                justify-content: space-between;
                 align-items: center;
-                padding: 20px;
+                gap: 20px;
+                background: rgba(255, 255, 255, .96);
+                border-bottom: 1px solid #f0e8dc;
             }
 
-            .container {
-                width: 100%;
-                max-width: 500px;
-                background: white;
-                padding: 45px 35px;
-                border-radius: 20px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-                text-align: center;
+            .brand {
+                color: var(--dark);
+                font-size: 23px;
+                font-weight: 800;
             }
 
-            .logo {
-                font-size: 70px;
-                margin-bottom: 10px;
+            .brand span {
+                color: var(--orange);
+            }
+
+            .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 24px;
+                flex-wrap: wrap;
+            }
+
+            .nav-links a {
+                color: #45423d;
+                font-weight: 600;
+                font-size: 14px;
+            }
+
+            .nav-links a:hover {
+                color: var(--orange);
+            }
+
+            .nav-button, .primary-btn {
+                background: var(--orange);
+                color: white !important;
+                padding: 12px 20px;
+                border-radius: 10px;
+                display: inline-block;
+                font-weight: 700;
+                transition: .2s;
+            }
+
+            .nav-button:hover, .primary-btn:hover {
+                background: #ea580c;
+                transform: translateY(-2px);
+            }
+
+            .hero {
+                padding: 65px 7% 75px;
+                display: grid;
+                grid-template-columns: 1.1fr .9fr;
+                align-items: center;
+                gap: 45px;
+                overflow: hidden;
+                background:
+                    radial-gradient(circle at 90% 10%, #ffe0bd 0, transparent 30%),
+                    linear-gradient(135deg, #fffaf2, #fff0db);
+            }
+
+            .eyebrow {
+                display: inline-block;
+                background: #ffead5;
+                color: #b94b08;
+                border-radius: 30px;
+                padding: 8px 14px;
+                font-size: 13px;
+                font-weight: 700;
+                margin-bottom: 20px;
             }
 
             h1 {
-                color: #e65100;
-                font-size: 30px;
-                margin-bottom: 12px;
+                font-size: clamp(38px, 5vw, 62px);
+                line-height: 1.12;
+                letter-spacing: -2px;
+                margin-bottom: 22px;
             }
 
-            .subtitle {
-                color: #555;
-                font-size: 16px;
-                margin-bottom: 25px;
-                line-height: 1.5;
+            h1 span {
+                color: var(--orange);
             }
 
-            .status {
-                display: inline-block;
-                background: #e8f5e9;
-                color: #2e7d32;
-                padding: 8px 15px;
-                border-radius: 20px;
-                font-size: 14px;
-                margin-bottom: 30px;
-                font-weight: bold;
+            .hero p {
+                color: var(--muted);
+                max-width: 490px;
+                margin-bottom: 28px;
+                font-size: 17px;
             }
 
-            .buttons {
+            .hero-actions {
                 display: flex;
-                flex-direction: column;
+                gap: 13px;
+                flex-wrap: wrap;
+            }
+
+            .secondary-btn {
+                display: inline-block;
+                padding: 11px 20px;
+                border: 1px solid #e3d6c5;
+                border-radius: 10px;
+                color: var(--dark);
+                font-weight: 700;
+                background: white;
+            }
+
+            .food-art {
+                min-height: 340px;
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .food-circle {
+                width: min(320px, 75vw);
+                height: min(320px, 75vw);
+                border-radius: 50%;
+                background: linear-gradient(145deg, #ffb65e, #f97316);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: clamp(100px, 17vw, 165px);
+                box-shadow: 0 25px 60px #e88a4a35;
+                transform: rotate(-7deg);
+            }
+
+            .floating-card {
+                position: absolute;
+                background: white;
+                border: 1px solid #f2e9dd;
+                padding: 13px 17px;
+                border-radius: 15px;
+                box-shadow: 0 12px 30px #47301b12;
+                font-size: 14px;
+                font-weight: 700;
+            }
+
+            .floating-card small {
+                display: block;
+                color: var(--muted);
+                font-weight: 400;
+            }
+
+            .card-top {
+                top: 25px;
+                right: 0;
+            }
+
+            .card-bottom {
+                bottom: 25px;
+                left: 0;
+            }
+
+            .section {
+                padding: 65px 7%;
+            }
+
+            .section-heading {
+                text-align: center;
+                margin-bottom: 35px;
+            }
+
+            .section-heading h2 {
+                font-size: clamp(27px, 4vw, 36px);
+                margin-bottom: 8px;
+            }
+
+            .section-heading p {
+                color: var(--muted);
+            }
+
+            .categories {
+                display: grid;
+                grid-template-columns: repeat(6, minmax(0, 1fr));
                 gap: 15px;
             }
 
-            .btn {
-                display: block;
-                width: 100%;
-                padding: 14px;
-                border-radius: 10px;
-                text-decoration: none;
-                font-size: 17px;
-                font-weight: bold;
-                transition: 0.3s;
-            }
-
-            .register {
-                background: #ff6f00;
-                color: white;
-            }
-
-            .register:hover {
-                background: #e65100;
-                transform: translateY(-2px);
-            }
-
-            .login {
+            .category {
+                text-align: center;
                 background: white;
-                color: #e65100;
-                border: 2px solid #ff6f00;
+                border: 1px solid #f0e8dc;
+                border-radius: 17px;
+                padding: 22px 8px;
+                transition: .2s;
             }
 
-            .login:hover {
-                background: #fff3e0;
-                transform: translateY(-2px);
+            .category:hover {
+                transform: translateY(-5px);
+                border-color: #fdba74;
+                box-shadow: 0 10px 25px #70451b0c;
+            }
+
+            .category .emoji {
+                font-size: 34px;
+                display: block;
+                margin-bottom: 8px;
+            }
+
+            .category h3 {
+                font-size: 13px;
             }
 
             .features {
-                margin-top: 30px;
-                padding-top: 25px;
-                border-top: 1px solid #eee;
-                color: #666;
+                background: white;
+            }
+
+            .feature-grid {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 20px;
+            }
+
+            .feature {
+                padding: 27px;
+                border: 1px solid #f0e8dc;
+                border-radius: 18px;
+                background: #fffdf9;
+            }
+
+            .feature-icon {
+                font-size: 32px;
+                margin-bottom: 12px;
+            }
+
+            .feature h3 {
+                margin-bottom: 7px;
+            }
+
+            .feature p {
+                color: var(--muted);
                 font-size: 14px;
-                line-height: 1.8;
             }
 
-            .footer {
-                margin-top: 25px;
-                color: #999;
-                font-size: 12px;
+            .steps {
+                display: grid;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                gap: 15px;
             }
 
-            @media (max-width: 480px) {
-                .container {
-                    padding: 35px 25px;
+            .step {
+                text-align: center;
+                padding: 20px 10px;
+            }
+
+            .step-number {
+                width: 46px;
+                height: 46px;
+                border-radius: 50%;
+                margin: 0 auto 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #ffead5;
+                color: #c4510b;
+                font-weight: 800;
+            }
+
+            .step p {
+                color: var(--muted);
+                font-size: 14px;
+            }
+
+            .cta {
+                margin: 0 7% 65px;
+                padding: 40px 25px;
+                text-align: center;
+                border-radius: 22px;
+                color: white;
+                background: linear-gradient(120deg, #f97316, #c2410c);
+            }
+
+            .cta h2 {
+                font-size: clamp(26px, 4vw, 35px);
+                margin-bottom: 8px;
+            }
+
+            .cta p {
+                margin-bottom: 20px;
+                color: #fff1e7;
+            }
+
+            .cta .primary-btn {
+                background: white;
+                color: #c2410c !important;
+            }
+
+            footer {
+                padding: 25px 7%;
+                background: #25251f;
+                color: #d6d3cd;
+                text-align: center;
+                font-size: 13px;
+            }
+
+            @media (max-width: 900px) {
+                .hero {
+                    grid-template-columns: 1fr 1fr;
+                    gap: 20px;
                 }
 
-                h1 {
-                    font-size: 26px;
+                .categories {
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
                 }
 
-                .logo {
-                    font-size: 60px;
+                .feature-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            @media (max-width: 600px) {
+                .navbar {
+                    padding: 15px 5%;
+                    align-items: flex-start;
+                    flex-direction: column;
+                }
+
+                .nav-links {
+                    gap: 14px;
+                }
+
+                .hero {
+                    grid-template-columns: 1fr;
+                    padding: 45px 6%;
+                }
+
+                .food-art {
+                    min-height: 300px;
+                }
+
+                .section {
+                    padding: 45px 6%;
+                }
+
+                .categories {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+
+                .steps {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+
+                .cta {
+                    margin: 0 5% 45px;
                 }
             }
         </style>
@@ -172,53 +459,178 @@ def home():
 
     <body>
 
-        <div class="container">
+        <nav class="navbar">
+            <a class="brand" href="/">🍴 Smart<span>Canteen</span></a>
 
-            <div class="logo">🍔</div>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/login">Menu</a>
+                <a href="/login">Track Orders</a>
+                <a href="/login">Login</a>
+                <a href="/register" class="nav-button">Get Started →</a>
+            </div>
+        </nav>
 
-            <h1>Smart Canteen</h1>
+        <section class="hero">
+            <div>
+                <div class="eyebrow">🍊 Your campus food, made easier</div>
 
-            <p class="subtitle">
-                Food Ordering & Management System
-            </p>
+                <h1>Good food.<br>
+                    Great mood.<br>
+                    <span>Zero hassle.</span>
+                </h1>
 
-            <div class="status">
-                ✓ Database Connected Successfully!
+                <p>
+                    Order your favourite canteen meals online,
+                    manage your cart and track your order.
+                    More convenience, less waiting.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="/register" class="primary-btn">
+                        🍔 Order Your Food
+                    </a>
+
+                    <a href="/login" class="secondary-btn">
+                        Sign In →
+                    </a>
+                </div>
             </div>
 
-            <div class="buttons">
+            <div class="food-art">
+                <div class="food-circle">🍔</div>
 
-                <a href="/register" class="btn register">
-                    📝 Create Account
-                </a>
+                <div class="floating-card card-top">
+                    🍟 Fresh favourites
+                    <small>Your campus food stop</small>
+                </div>
 
-                <a href="/login" class="btn login">
-                    🔐 Login
-                </a>
+                <div class="floating-card card-bottom">
+                    🎟️ Digital order tokens
+                    <small>Follow your order status</small>
+                </div>
+            </div>
+        </section>
 
+        <section class="section">
+            <div class="section-heading">
+                <h2>Something for every craving</h2>
+                <p>Explore popular canteen food categories.</p>
             </div>
 
-            <div class="features">
-                🍔 Easy Food Ordering<br>
-                🛒 Simple Cart Management<br>
-                📋 Track Your Orders<br>
-                ⚡ Fast & Convenient
+            <div class="categories">
+                <div class="category">
+                    <span class="emoji">🥞</span>
+                    <h3>South Indian</h3>
+                </div>
+
+                <div class="category">
+                    <span class="emoji">🥪</span>
+                    <h3>Snacks</h3>
+                </div>
+
+                <div class="category">
+                    <span class="emoji">☕</span>
+                    <h3>Beverages</h3>
+                </div>
+
+                <div class="category">
+                    <span class="emoji">🍱</span>
+                    <h3>Lunch & Thali</h3>
+                </div>
+
+                <div class="category">
+                    <span class="emoji">🍕</span>
+                    <h3>Fast Food</h3>
+                </div>
+
+                <div class="category">
+                    <span class="emoji">🍰</span>
+                    <h3>Desserts</h3>
+                </div>
+            </div>
+        </section>
+
+        <section class="section features">
+            <div class="section-heading">
+                <h2>Your canteen, upgraded</h2>
+                <p>Simple features for a smoother food-ordering experience.</p>
             </div>
 
-            <div class="footer">
-                Smart Canteen Management System
+            <div class="feature-grid">
+                <div class="feature">
+                    <div class="feature-icon">🛒</div>
+                    <h3>Easy Online Ordering</h3>
+                    <p>Browse available dishes, add items to your cart
+                    and place your order in a few simple steps.</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">🎟️</div>
+                    <h3>Digital Order Tokens</h3>
+                    <p>Get a token when your order is placed and use it
+                    to identify your order.</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">📦</div>
+                    <h3>Order Tracking</h3>
+                    <p>Check your order status and see when your food
+                    is being prepared or is ready.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-heading">
+                <h2>How it works</h2>
+                <p>Your next meal is just a few steps away.</p>
             </div>
 
-        </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Browse</h3>
+                    <p>Explore the available food menu.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Add to Cart</h3>
+                    <p>Select dishes and quantities.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Place Order</h3>
+                    <p>Confirm your order and get a token.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Collect</h3>
+                    <p>Track the status and collect your food.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <h2>Ready for your next favourite meal?</h2>
+            <p>Create your account and start exploring the canteen menu.</p>
+            <a href="/register" class="primary-btn">Create Free Account →</a>
+        </section>
+
+        <footer>
+            © Smart Canteen Management System | Made for campus convenience 🍴
+        </footer>
 
     </body>
     </html>
     """
-
-
 # =========================
 # REGISTER
 # =========================
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -232,10 +644,10 @@ def register():
 
         hashed_password = generate_password_hash(password)
 
+        db = get_db_connection()
         cursor = db.cursor()
 
         try:
-
             cursor.execute(
                 """
                 INSERT INTO users
@@ -248,25 +660,22 @@ def register():
             db.commit()
 
         except pymysql.err.IntegrityError:
-
-            cursor.close()
-
+            db.rollback()
             return """
                 <h2>Email already registered!</h2>
-
                 <a href="/register">Try Again</a>
             """
 
-        cursor.close()
+        finally:
+            cursor.close()
+            db.close()
 
         return """
             <h2>Registration successful! 🎉</h2>
-
             <a href="/login">Go to Login</a>
         """
 
     return render_template("register.html")
-
 
 # =========================
 # LOGIN
@@ -280,20 +689,24 @@ def login():
         email = request.form["email"]
         password = request.form["password"]
 
+        db = get_db_connection()
         cursor = db.cursor()
 
-        cursor.execute(
-            """
-            SELECT *
-            FROM users
-            WHERE email = %s
-            """,
-            (email,)
-        )
+        try:
+            cursor.execute(
+                """
+                SELECT *
+                FROM users
+                WHERE email = %s
+                """,
+                (email,)
+            )
 
-        user = cursor.fetchone()
+            user = cursor.fetchone()
 
-        cursor.close()
+        finally:
+            cursor.close()
+            db.close()
 
         if user and check_password_hash(user[3], password):
 
@@ -303,25 +716,20 @@ def login():
             session["email"] = user[2]
             session["role"] = user[4]
 
-            # If admin, go to admin dashboard
+            # Redirect admin to admin dashboard
             if user[4].lower() == "admin":
-
                 return redirect("/admin")
 
-            # Otherwise student dashboard
+            # Redirect student to dashboard
             return redirect("/dashboard")
 
         else:
-
             return """
                 <h2>❌ Invalid email or password</h2>
-
                 <a href="/login">Try Again</a>
             """
 
     return render_template("login.html")
-
-
 
 # =========================
 # STUDENT DASHBOARD
@@ -1290,6 +1698,7 @@ def add_menu():
         item_name = request.form["item_name"]
         price = request.form["price"]
         category = request.form["category"]
+        prep_time = request.form["prep_time"]
         availability = request.form["availability"]
 
         cursor = db.cursor()
@@ -1297,13 +1706,14 @@ def add_menu():
         cursor.execute(
             """
             INSERT INTO menu
-            (item_name, price, category, availability)
-            VALUES (%s, %s, %s, %s)
+            (item_name, price, category, prep_time, availability)
+            VALUES (%s, %s, %s, %s, %s)
             """,
             (
                 item_name,
                 price,
                 category,
+                prep_time,
                 availability
             )
         )
