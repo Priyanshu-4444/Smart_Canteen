@@ -1,383 +1,386 @@
-```html
+
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
-    <title>My Orders</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders | Smart Canteen</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
+            background: #fff8f0;
+            color: #352b25;
         }
 
-        .header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 25px;
+        nav {
+            background: white;
+            padding: 16px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .brand {
+            color: #e76f00;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: #51443a;
+            text-decoration: none;
+            margin-left: 14px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #e76f00;
+        }
+
+        .hero {
             text-align: center;
+            padding: 35px 15px 25px;
+        }
+
+        .hero h1 {
+            margin: 0 0 10px;
+            font-size: 32px;
+        }
+
+        .hero p {
+            color: #7b6b60;
+            margin: 0;
         }
 
         .container {
-            width: 95%;
-            max-width: 1100px;
-            margin: 30px auto;
+            width: 92%;
+            max-width: 1200px;
+            margin: 0 auto 40px;
         }
 
-        .top-bar {
-            background-color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .back-button {
-            display: inline-block;
-            padding: 10px 18px;
-            background-color: #3498db;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
+        .summary-box,
         .table-box {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: white;
+            padding: 24px;
+            border-radius: 15px;
+            box-shadow: 0 5px 22px rgba(80,50,20,0.07);
+            margin-bottom: 22px;
+        }
+
+        .summary-box h2,
+        .table-box h2 {
+            margin-top: 0;
+            color: #563a27;
+        }
+
+        .summary-box p {
+            margin-bottom: 0;
+            color: #7b6b60;
+        }
+
+        .toolbar {
+            margin-bottom: 18px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 11px 16px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 3px;
+        }
+
+        .menu-btn {
+            background: #e76f00;
+        }
+
+        .receipt-button {
+            background: #2878b8;
+        }
+
+        .cancel-button {
+            background: #d94841;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+
+        .table-wrapper {
+            width: 100%;
             overflow-x: auto;
         }
 
         table {
             width: 100%;
+            min-width: 1050px;
             border-collapse: collapse;
         }
 
         th {
-            background-color: #34495e;
-            color: white;
-            padding: 14px;
+            background: #fff0df;
+            color: #8c4300;
+            padding: 15px 12px;
+            font-size: 13px;
         }
 
         td {
-            padding: 14px;
+            padding: 15px 12px;
             text-align: center;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #f0e7df;
+            font-size: 13px;
+        }
+
+        tbody tr:hover {
+            background: #fffaf5;
         }
 
         .token {
             display: inline-block;
-            background-color: #fff3cd;
-            color: #856404;
-            border: 2px solid #f1c40f;
-            padding: 7px 12px;
+            background: #fff0c9;
+            color: #855600;
+            border: 1px solid #edc35c;
+            padding: 8px 11px;
             border-radius: 8px;
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
         }
 
         .pending {
-            color: #f39c12;
-            font-weight: bold;
+            background: #fff0cf;
+            color: #946200;
         }
 
         .preparing {
-            color: #3498db;
-            font-weight: bold;
+            background: #dceeff;
+            color: #185b91;
         }
 
         .ready {
-            color: #27ae60;
-            font-weight: bold;
+            background: #d9f5e2;
+            color: #206b39;
         }
 
         .completed {
-            color: #8e44ad;
-            font-weight: bold;
+            background: #eee2ff;
+            color: #6940a1;
+        }
+
+        .cancelled {
+            background: #ffe0e0;
+            color: #a12626;
+        }
+
+        .unknown {
+            background: #eeeeee;
+            color: #444444;
         }
 
         .empty {
             text-align: center;
-            padding: 40px;
+            padding: 35px 15px;
         }
 
-        .summary-box {
-            background-color: white;
-            padding: 18px 25px;
-            margin: 20px auto;
-            width: 90%;
-            max-width: 1100px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        .empty .emoji {
+            font-size: 55px;
         }
 
-        .summary-box h3 {
-            margin: 0 0 8px 0;
-            color: #2c3e50;
+        .empty p {
+            color: #7b6b60;
+            margin-bottom: 22px;
         }
 
-        .summary-box p {
-            margin: 0;
-            color: #666;
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #85766a;
+            font-size: 13px;
         }
 
-        .status.cancelled {
-            background-color: #f8d7da;
-            color: #842029;
-        }
+        @media (max-width: 650px) {
+            nav {
+                justify-content: center;
+            }
 
-        .receipt-button {
-            display: inline-block;
-            padding: 8px 12px;
-            background-color: #3498db;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-bottom: 5px;
-        }
+            nav a {
+                margin: 5px 7px;
+            }
 
-        .cancel-button {
-            padding: 8px 12px;
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+            .hero h1 {
+                font-size: 26px;
+            }
 
-        .cancel-button:hover {
-            background-color: #c0392b;
+            .summary-box,
+            .table-box {
+                padding: 17px;
+            }
         }
-
     </style>
-
 </head>
-
 
 <body>
 
+<nav>
+    <div class="brand">🍔 Smart Canteen</div>
 
-    <div class="header">
-
-        <h1>🍔 Smart Canteen</h1>
-
-        <h2>📋 My Orders</h2>
-
+    <div>
+        <a href="/dashboard">Home</a>
+        <a href="/menu">Menu</a>
+        <a href="/cart">My Cart</a>
+        <a href="/my_orders">My Orders</a>
+        <a href="/logout">Logout</a>
     </div>
+</nav>
 
+<header class="hero">
+    <h1>📦 My Orders</h1>
+    <p>Track your food orders, check your tokens, and view receipts.</p>
+</header>
+
+<div class="container">
 
     <div class="summary-box">
-
-        <h3>📊 Order Summary</h3>
-
-        <p>Your previous orders are listed below.</p>
-
+        <h2>📊 Order History</h2>
+        <p>View your orders and follow their latest status below.</p>
     </div>
 
+    <div class="table-box">
 
-    <div class="container">
-
-
-        <div class="top-bar">
-
-            <a href="/menu" class="back-button">
-                🍔 Back to Menu
+        <div class="toolbar">
+            <a href="/menu" class="btn menu-btn">
+                ← Back to Menu
             </a>
-
         </div>
 
+        <h2>🧾 Your Orders</h2>
 
-        <div class="table-box">
+        {% if orders %}
 
-            <h2>📦 Your Order History</h2>
-
-
-            {% if orders %}
-
-
+        <div class="table-wrapper">
             <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Token</th>
+                        <th>Food Item</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Order Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
 
-                <tr>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td><strong>#{{ order[0] }}</strong></td>
 
-                    <th>Order ID</th>
-
-                    <th>Token</th>
-
-                    <th>Food Item</th>
-
-                    <th>Price</th>
-
-                    <th>Quantity</th>
-
-                    <th>Total</th>
-
-                    <th>Status</th>
-
-                    <th>Date</th>
-
-                    <th>Receipt</th>
-
-                </tr>
-
-
-                {% for order in orders %}
-
-
-                <tr>
-
-                    <td>
-                        #{{ order[0] }}
-                    </td>
-
-
-                    <td>
-
-                        <span class="token">
-                            🎫 {{ order[1] }}
-                        </span>
-
-                    </td>
-
-
-                    <td>
-                        🍔 {{ order[3] }}
-                    </td>
-
-
-                    <td>
-                        ₹{{ order[4] }}
-                    </td>
-
-
-                    <td>
-                        {{ order[5] }}
-                    </td>
-
-
-                    <td>
-                        <strong>₹{{ order[6] }}</strong>
-                    </td>
-
-
-                    <td>
-
-                        {% if order[7] == "Pending" %}
-
-                            <span class="pending">
-                                ⏳ Pending
+                        <td>
+                            <span class="token">
+                                🎫 {{ order[1] }}
                             </span>
+                        </td>
 
-                        {% elif order[7] == "Preparing" %}
+                        <td>🍽️ {{ order[3] }}</td>
 
-                            <span class="preparing">
-                                👨‍🍳 Preparing
-                            </span>
+                        <td>₹{{ order[4] }}</td>
 
-                        {% elif order[7] == "Ready" %}
+                        <td>{{ order[5] }}</td>
 
-                            <span class="ready">
-                                ✅ Ready
-                            </span>
+                        <td>
+                            <strong>₹{{ order[6] }}</strong>
+                        </td>
 
-                        {% elif order[7] == "Completed" %}
+                        <td>
+                            {% if order[7] == "Pending" %}
+                                <span class="status pending">⏳ Pending</span>
+                            {% elif order[7] == "Preparing" %}
+                                <span class="status preparing">👨‍🍳 Preparing</span>
+                            {% elif order[7] == "Ready" %}
+                                <span class="status ready">✅ Ready</span>
+                            {% elif order[7] == "Completed" %}
+                                <span class="status completed">🎉 Completed</span>
+                            {% elif order[7] == "Cancelled" %}
+                                <span class="status cancelled">❌ Cancelled</span>
+                            {% else %}
+                                <span class="status unknown">{{ order[7] }}</span>
+                            {% endif %}
+                        </td>
 
-                            <span class="completed">
-                                🎉 Completed
-                            </span>
+                        <td>{{ order[8] }}</td>
 
-                        {% elif order[7] == "Cancelled" %}
+                        <td>
+                            <a href="/receipt/{{ order[0] }}"
+                               class="btn receipt-button">
+                                🧾 Receipt
+                            </a>
 
-                            <span class="status cancelled">
-                                ❌ Cancelled
-                            </span>
+                            {% if order[7] == "Pending" %}
+                            <form method="POST"
+                                  action="/cancel_order/{{ order[0] }}"
+                                  onsubmit="return confirm('Are you sure you want to cancel this order?');">
 
-                        {% else %}
-
-                            {{ order[7] }}
-
-                        {% endif %}
-
-                    </td>
-
-
-                    <td>
-                        {{ order[8] }}
-                    </td>
-
-
-                    <td>
-
-                        <a
-                            href="/receipt/{{ order[0] }}"
-                            class="receipt-button"
-                        >
-                            🧾 View Receipt
-                        </a>
-
-
-                        {% if order[7] == "Pending" %}
-
-                            <form
-                                method="POST"
-                                action="/cancel_order/{{ order[0] }}"
-                                style="display: inline;"
-                                onsubmit="return confirm('Are you sure you want to cancel this order?');"
-                            >
-
-                                <button
-                                    type="submit"
-                                    class="cancel-button"
-                                >
-                                    ❌ Cancel Order
+                                <button type="submit"
+                                        class="btn cancel-button">
+                                    Cancel Order
                                 </button>
-
                             </form>
-
-                        {% endif %}
-
-                    </td>
-
-                </tr>
-
-
-                {% endfor %}
-
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
             </table>
-
-
-            {% else %}
-
-
-            <div class="empty">
-
-                <h2>
-                    😔 No Orders Yet
-                </h2>
-
-                <p>
-                    You haven't placed any orders yet.
-                </p>
-
-                <br>
-
-                <a href="/menu" class="back-button">
-                    🍔 Order Food
-                </a>
-
-            </div>
-
-
-            {% endif %}
-
         </div>
+
+        {% else %}
+
+        <div class="empty">
+            <div class="emoji">📦</div>
+            <h2>No Orders Yet</h2>
+            <p>Your order history will appear here after you place an order.</p>
+
+            <a href="/menu" class="btn menu-btn">
+                🍔 Explore Menu
+            </a>
+        </div>
+
+        {% endif %}
 
     </div>
+
+</div>
+
+<footer>
+    © Smart Canteen Food Ordering System
+</footer>
 
 </body>
-
 </html>
-```

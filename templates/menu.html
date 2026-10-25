@@ -1,376 +1,611 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Canteen Menu</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Menu | Smart Canteen</title>
 
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            margin: 0;
-            padding: 30px;
+            background: #fffaf4;
+            color: #29251f;
         }
 
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        .top-bar {
-            max-width: 1100px;
-            margin: 20px auto;
-            text-align: center;
-        }
-
-        .search-box {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        input, select {
-            padding: 10px;
-            margin: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 15px;
-        }
-
-        button {
-            padding: 10px 18px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 15px;
-        }
-
-        .search-btn {
-            background: #007bff;
-            color: white;
-        }
-
-        .clear-btn {
-            background: #6c757d;
-            color: white;
+        a {
             text-decoration: none;
-            padding: 10px 18px;
-            border-radius: 5px;
-            margin-left: 5px;
+            color: inherit;
         }
 
-        /* CATEGORY SECTION */
-
-        .categories {
-            max-width: 1100px;
-            margin: 25px auto;
+        .navbar {
             background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 1px solid #f0e7dc;
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e76f27;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 22px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #51483f;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .nav-links a:hover {
+            color: #e76f27;
+        }
+
+        .nav-links .logout-link {
+            color: #c65319;
+            background: #fff0e7;
+            padding: 10px 14px;
+            border-radius: 8px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1150px;
+            margin: 30px auto;
+        }
+
+        .hero {
+            padding: 32px;
+            background: linear-gradient(120deg, #fff0df, #ffe0c1);
+            border-radius: 20px;
+            margin-bottom: 28px;
+        }
+
+        .eyebrow {
+            color: #c65d22;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .hero h1 {
+            font-size: clamp(27px, 4vw, 36px);
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            color: #65584c;
+            line-height: 1.7;
+        }
+
+        .search-panel,
+        .category-panel {
+            background: white;
+            border: 1px solid #f0e7dc;
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 24px;
+        }
+
+        .panel-heading {
+            font-size: 19px;
+            margin-bottom: 16px;
+        }
+
+        .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .search-form input,
+        .search-form select {
+            flex: 1;
+            min-width: 160px;
+            padding: 13px;
+            border: 1px solid #e5d9cc;
+            border-radius: 9px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 17px;
+            border: none;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
             text-align: center;
         }
 
-        .categories h2 {
-            margin-top: 0;
-            color: #333;
+        .btn-primary {
+            background: #e76f27;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #c95718;
+        }
+
+        .btn-light {
+            background: #f5eee7;
+            color: #51483f;
         }
 
         .category-buttons {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
             gap: 10px;
         }
 
         .category-btn {
-            text-decoration: none;
-            padding: 10px 16px;
-            border-radius: 20px;
-            background: #f1f3f5;
-            color: #333;
-            border: 1px solid #ddd;
-            font-size: 14px;
+            display: inline-block;
+            background: #fffaf4;
+            border: 1px solid #eee0d2;
+            border-radius: 22px;
+            padding: 10px 15px;
+            font-size: 13px;
+            color: #51483f;
             transition: 0.2s;
         }
 
-        .category-btn:hover {
-            background: #007bff;
+        .category-btn:hover,
+        .category-btn.active {
+            background: #e76f27;
+            border-color: #e76f27;
             color: white;
         }
 
-        .all-category {
-            background: #007bff;
-            color: white;
+        .menu-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin: 30px 0 18px;
         }
 
-        /* MENU CARDS */
+        .menu-heading h2 {
+            font-size: 23px;
+        }
+
+        .menu-heading p {
+            color: #81766b;
+            font-size: 13px;
+            margin-top: 6px;
+        }
 
         .menu-container {
-            max-width: 1100px;
-            margin: 30px auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 20px;
         }
 
-        .card {
+        .food-card {
+            display: flex;
+            flex-direction: column;
             background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            text-align: center;
+            border: 1px solid #f0e7dc;
+            border-radius: 16px;
+            padding: 23px;
+            transition: 0.2s;
+            min-width: 0;
         }
 
-        .card h2 {
-            color: #333;
+        .food-card:hover {
+            transform: translateY(-4px);
+            border-color: #edaa7f;
+            box-shadow: 0 9px 24px rgba(70, 44, 20, 0.07);
+        }
+
+        .food-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 105px;
+            border-radius: 12px;
+            background: #fff2e5;
+            font-size: 53px;
+            margin-bottom: 18px;
+        }
+
+        .food-card h3 {
+            font-size: 19px;
+            overflow-wrap: anywhere;
             margin-bottom: 10px;
         }
 
-        .price {
-            font-size: 20px;
+        .food-category {
+            display: inline-block;
+            width: fit-content;
+            color: #a75a2c;
+            background: #fff1e5;
+            padding: 6px 10px;
+            border-radius: 7px;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .food-info {
+            color: #81766b;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .food-price {
+            font-size: 23px;
             font-weight: bold;
-            color: #28a745;
+            color: #d76120;
+            margin: 5px 0 18px;
         }
 
-        .category {
-            color: #777;
-            margin: 8px 0;
+        .food-card form {
+            margin-top: auto;
         }
 
-        .order-btn {
-            background: #28a745;
+        .quantity-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 13px;
+            font-size: 13px;
+        }
+
+        .quantity-row select {
+            padding: 9px;
+            border: 1px solid #e5d9cc;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .add-btn {
+            width: 100%;
+            background: #e76f27;
             color: white;
-            margin-top: 10px;
+            padding: 13px;
+            border: none;
+            border-radius: 9px;
+            font-weight: bold;
+            cursor: pointer;
         }
 
-        .quantity {
-            width: 70px;
+        .add-btn:hover {
+            background: #c95718;
+        }
+
+        .unavailable {
+            display: block;
+            background: #fce9e7;
+            color: #b42318;
+            padding: 12px;
+            border-radius: 9px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 13px;
+            margin-top: auto;
         }
 
         .no-items {
-            text-align: center;
             grid-column: 1 / -1;
+            text-align: center;
+            padding: 45px 20px;
             background: white;
-            padding: 30px;
-            border-radius: 10px;
+            border: 1px solid #f0e7dc;
+            border-radius: 16px;
+        }
+
+        .no-items .emoji {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .no-items h3 {
+            margin-bottom: 10px;
+        }
+
+        .no-items p {
+            color: #81766b;
+            margin-bottom: 20px;
         }
 
         .bottom-links {
-            text-align: center;
-            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin: 30px 0;
         }
 
-        .bottom-links a {
-            text-decoration: none;
-            background: #343a40;
-            color: white;
-            padding: 10px 18px;
-            border-radius: 5px;
-            margin: 5px;
-            display: inline-block;
+        footer {
+            text-align: center;
+            padding: 25px 15px;
+            color: #81766b;
+            font-size: 13px;
+        }
+
+        @media (max-width: 850px) {
+            .menu-container {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 560px) {
+            .navbar {
+                padding: 16px 5%;
+            }
+
+            .nav-links {
+                gap: 13px;
+            }
+
+            .container {
+                width: 92%;
+                margin-top: 22px;
+            }
+
+            .hero {
+                padding: 24px;
+            }
+
+            .search-panel,
+            .category-panel {
+                padding: 17px;
+            }
+
+            .menu-container {
+                grid-template-columns: 1fr;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .search-form input,
+            .search-form select {
+                width: 100%;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <h1>🍔 Canteen Menu</h1>
+    <nav class="navbar">
+        <a href="/dashboard" class="brand">🍔 Smart Canteen</a>
 
-
-    <!-- CATEGORY BUTTONS -->
-
-    <div class="categories">
-
-        <h2>🍽️ Food Categories</h2>
-
-        <div class="category-buttons">
-
-            <a href="/menu" class="category-btn all-category">
-                🍽️ All
-            </a>
-
-            <a href="/menu?category=South%20Indian" class="category-btn">
-                🍛 South Indian
-            </a>
-
-            <a href="/menu?category=Snacks" class="category-btn">
-                🥪 Snacks & Chaat
-            </a>
-
-            <a href="/menu?category=Beverage" class="category-btn">
-                🥤 Beverages
-            </a>
-
-            <a href="/menu?category=Lunch" class="category-btn">
-                🍱 Lunch & Thali
-            </a>
-
-            <a href="/menu?category=Fast%20Food" class="category-btn">
-                🍜 Chinese & Fast Food
-            </a>
-
-            <a href="/menu?category=Dessert" class="category-btn">
-                🍰 Desserts & Bakery
-            </a>
-
+        <div class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/menu">Food Menu</a>
+            <a href="/cart">My Cart</a>
+            <a href="/my_orders">My Orders</a>
+            <a href="/logout" class="logout-link">Logout ↗</a>
         </div>
+    </nav>
 
-    </div>
+    <main class="container">
 
+        <section class="hero">
+            <div class="eyebrow">Fresh food · Easy ordering</div>
+            <h1>Discover Your Next Favourite Meal 🍽️</h1>
+            <p>
+                Explore the canteen menu, choose your favourite dishes,
+                and add them to your cart in just a few clicks.
+            </p>
+        </section>
 
-    <!-- SEARCH AND FILTER -->
+        <section class="search-panel">
+            <h2 class="panel-heading">🔍 Find Your Food</h2>
 
-    <div class="top-bar">
-
-        <div class="search-box">
-
-            <form method="GET" action="/menu">
-
+            <form method="GET" action="/menu" class="search-form">
                 <input
                     type="text"
                     name="search"
-                    placeholder="🔍 Search food..."
+                    placeholder="Search by food name..."
                     value="{{ search }}"
                 >
 
                 <select name="category">
-
                     <option value="">All Categories</option>
 
                     {% for category in categories %}
-
                         <option
                             value="{{ category[0] }}"
-                            {% if selected_category == category[0] %}
-                                selected
-                            {% endif %}
+                            {% if selected_category == category[0] %}selected{% endif %}
                         >
                             {{ category[0] }}
                         </option>
-
                     {% endfor %}
-
                 </select>
 
-                <button type="submit" class="search-btn">
-                    🔍 Search
+                <button type="submit" class="btn btn-primary">
+                    Search
                 </button>
 
-                <a href="/menu" class="clear-btn">
-                    Clear
-                </a>
-
+                <a href="/menu" class="btn btn-light">Clear</a>
             </form>
+        </section>
 
-        </div>
+        <section class="category-panel">
+            <h2 class="panel-heading">🍽️ Browse Categories</h2>
 
-    </div>
+            <div class="category-buttons">
+                <a
+                    href="/menu"
+                    class="category-btn {% if not selected_category %}active{% endif %}"
+                >🍽️ All Food</a>
 
+                <a
+                    href="/menu?category=South%20Indian"
+                    class="category-btn {% if selected_category == 'South Indian' %}active{% endif %}"
+                >🍛 South Indian</a>
 
-    <!-- MENU ITEMS -->
+                <a
+                    href="/menu?category=Snacks"
+                    class="category-btn {% if selected_category == 'Snacks' %}active{% endif %}"
+                >🥪 Snacks & Chaat</a>
 
-    <div class="menu-container">
+                <a
+                    href="/menu?category=Beverage"
+                    class="category-btn {% if selected_category == 'Beverage' %}active{% endif %}"
+                >🥤 Beverages</a>
 
-        {% if items %}
+                <a
+                    href="/menu?category=Lunch"
+                    class="category-btn {% if selected_category == 'Lunch' %}active{% endif %}"
+                >🍱 Lunch & Thali</a>
 
-            {% for item in items %}
+                <a
+                    href="/menu?category=Fast%20Food"
+                    class="category-btn {% if selected_category == 'Fast Food' %}active{% endif %}"
+                >🍜 Fast Food</a>
 
-                <div class="card">
+                <a
+                    href="/menu?category=Dessert"
+                    class="category-btn {% if selected_category == 'Dessert' %}active{% endif %}"
+                >🍰 Desserts</a>
+            </div>
+        </section>
 
-                    <h2>{{ item[1] }}</h2>
-
-                    <p class="price">
-                        ₹{{ item[2] }}
-                    </p>
-
-                    <p class="category">
-                        Category: {{ item[3] }}
-                    </p>
-
-
-                    <!-- ADD TO CART -->
-
-                    <form method="POST" action="/add_to_cart">
-
-                        <input
-                            type="hidden"
-                            name="item_name"
-                            value="{{ item[1] }}"
-                        >
-
-                        <input
-                            type="hidden"
-                            name="price"
-                            value="{{ item[2] }}"
-                        >
-
-                        <label>
-                            Quantity:
-                        </label>
-
-                        <select name="quantity" class="quantity">
-
-                            {% for i in range(1, 11) %}
-
-                                <option value="{{ i }}">
-                                    {{ i }}
-                                </option>
-
-                            {% endfor %}
-
-                        </select>
-
-                        <br>
-
-                        <button type="submit" class="order-btn">
-                            🛒 Add to Cart
-                        </button>
-
-                    </form>
-
+        <section>
+            <div class="menu-heading">
+                <div>
+                    <h2>Our Menu</h2>
+                    <p>Choose something delicious for your next break.</p>
                 </div>
-
-            {% endfor %}
-
-        {% else %}
-
-            <div class="no-items">
-
-                <h2>😕 No food items found</h2>
-
-                <p>
-                    Try another food name or category.
-                </p>
-
             </div>
 
-        {% endif %}
+            <div class="menu-container">
 
-    </div>
+                {% if items %}
 
+                    {% for item in items %}
+                        <article class="food-card">
 
-    <!-- BOTTOM LINKS -->
+                            <div class="food-icon">
+                                {% if item[3] == 'South Indian' %}
+                                    🍛
+                                {% elif item[3] == 'Snacks' %}
+                                    🥪
+                                {% elif item[3] == 'Beverage' %}
+                                    🥤
+                                {% elif item[3] == 'Lunch' %}
+                                    🍱
+                                {% elif item[3] == 'Fast Food' %}
+                                    🍜
+                                {% elif item[3] == 'Dessert' %}
+                                    🍰
+                                {% else %}
+                                    🍽️
+                                {% endif %}
+                            </div>
 
-    <div class="bottom-links">
+                            <h3>{{ item[1] }}</h3>
 
-        <a href="/cart">
-            🛒 View Cart
-        </a>
+                            <span class="food-category">
+                                {{ item[3] if item[3] else 'General' }}
+                            </span>
 
-        <a href="/dashboard">
-            🏠 Dashboard
-        </a>
+                            {% if item|length > 4 and item[4] %}
+                                <p class="food-info">
+                                    ⏱️ Preparation time: {{ item[4] }} minutes
+                                </p>
+                            {% else %}
+                                <p class="food-info">
+                                    ⏱️ Preparation time varies
+                                </p>
+                            {% endif %}
 
-        <a href="/my_orders">
-            📋 My Orders
-        </a>
+                            <p class="food-price">₹{{ item[2] }}</p>
 
-        <a href="/logout">
-            🚪 Logout
-        </a>
+                            {% if item|length > 5 and item[5] == 'Unavailable' %}
+                                <span class="unavailable">
+                                    Currently Unavailable
+                                </span>
+                            {% else %}
+                                <form method="POST" action="/add_to_cart">
 
-    </div>
+                                    <input
+                                        type="hidden"
+                                        name="item_name"
+                                        value="{{ item[1] }}"
+                                    >
+
+                                    <input
+                                        type="hidden"
+                                        name="price"
+                                        value="{{ item[2] }}"
+                                    >
+
+                                    <div class="quantity-row">
+                                        <label for="qty-{{ item[0] }}">
+                                            Quantity
+                                        </label>
+
+                                        <select
+                                            name="quantity"
+                                            id="qty-{{ item[0] }}"
+                                        >
+                                            {% for i in range(1, 11) %}
+                                                <option value="{{ i }}">{{ i }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <button type="submit" class="add-btn">
+                                        🛒 Add to Cart
+                                    </button>
+                                </form>
+                            {% endif %}
+
+                        </article>
+                    {% endfor %}
+
+                {% else %}
+                    <div class="no-items">
+                        <div class="emoji">🍽️</div>
+                        <h3>No food items found</h3>
+                        <p>Try a different food name or category.</p>
+                        <a href="/menu" class="btn btn-primary">
+                            Show All Food
+                        </a>
+                    </div>
+                {% endif %}
+
+            </div>
+        </section>
+
+        <div class="bottom-links">
+            <a href="/cart" class="btn btn-primary">🛒 View Cart</a>
+            <a href="/dashboard" class="btn btn-light">🏠 Dashboard</a>
+            <a href="/my_orders" class="btn btn-light">📋 My Orders</a>
+        </div>
+
+    </main>
+
+    <footer>
+        © Smart Canteen Food Ordering System · Made for your campus
+    </footer>
 
 </body>
 </html>
