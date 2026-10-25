@@ -1,185 +1,299 @@
+```html
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
-    <title>Sales Report</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Report | Smart Canteen</title>
 
     <style>
-
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
         }
 
-        .header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 25px;
-            text-align: center;
+        body {
+            background: #fff8f0;
+            color: #38291f;
+        }
+
+        header {
+            background: white;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            border-bottom: 1px solid #f0dfd0;
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: bold;
+            color: #e86c24;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #554438;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: #e86c24;
         }
 
         .container {
-            width: 90%;
-            max-width: 1100px;
-            margin: 30px auto;
+            max-width: 1150px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .heading {
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #806f61;
+            font-size: 14px;
         }
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-bottom: 25px;
         }
 
-        .card {
-            background-color: white;
-            padding: 25px;
-            text-align: center;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        .stat-card {
+            background: white;
+            border: 1px solid #f0e1d4;
+            border-radius: 13px;
+            padding: 23px;
+            box-shadow: 0 4px 15px rgba(85, 55, 30, 0.04);
         }
 
-        .card h2 {
-            margin: 10px 0;
-            font-size: 30px;
+        .stat-card p {
+            color: #806f61;
+            font-size: 14px;
+            margin-bottom: 12px;
         }
 
-        .card p {
-            margin: 0;
-            color: #555;
+        .stat-card h2 {
+            font-size: 27px;
+            color: #e86c24;
+        }
+
+        .stat-card .green {
+            color: #21864b;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid #f0e1d4;
+            border-radius: 13px;
+            padding: 22px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(85, 55, 30, 0.04);
+        }
+
+        .panel h2 {
+            font-size: 20px;
+            margin-bottom: 18px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        th {
+            text-align: left;
+            background: #fff1e4;
+            color: #74513b;
+            padding: 14px;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #f1e6dc;
+            font-size: 14px;
+        }
+
+        tbody tr:hover td {
+            background: #fffaf5;
+        }
+
+        .amount {
+            color: #21864b;
             font-weight: bold;
         }
 
-        .revenue {
-            color: #27ae60;
-        }
-
-        .orders {
-            color: #3498db;
-        }
-
-        .today {
-            color: #f39c12;
-        }
-
-        .button-box {
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .button {
+        .status {
             display: inline-block;
-            padding: 12px 20px;
-            margin: 5px;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
+            border-radius: 20px;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            background: #fff0e2;
+            color: #bd591e;
         }
 
-        .admin-button {
-            background-color: #3498db;
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #806f61;
         }
 
-        .menu-button {
-            background-color: #27ae60;
+        .note {
+            color: #806f61;
+            font-size: 13px;
+            margin-top: 12px;
         }
 
-        @media (max-width: 800px) {
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #8c7a6c;
+            font-size: 13px;
+        }
 
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
+        @media (max-width: 600px) {
+            header {
+                align-items: flex-start;
             }
 
-        }
-
-        @media (max-width: 500px) {
-
-            .stats {
-                grid-template-columns: 1fr;
+            nav {
+                gap: 12px;
             }
 
-        }
+            h1 {
+                font-size: 25px;
+            }
 
+            .container {
+                margin-top: 25px;
+            }
+        }
     </style>
-
 </head>
 
 <body>
+<header>
+    <div class="logo">🍔 Smart Canteen</div>
 
-    <div class="header">
+    <nav>
+        <a href="{{ url_for('admin') }}">Dashboard</a>
+        <a href="{{ url_for('admin_menu') }}">Manage Menu</a>
+        <a href="{{ url_for('sales_report') }}" class="active">Sales Report</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+</header>
 
+<main class="container">
+    <section class="heading">
         <h1>📊 Sales Report</h1>
+        <p class="subtitle">
+            Review canteen sales, order totals and recent transactions.
+        </p>
+    </section>
 
-        <p><h1>🍔 Smart Canteen Food Ordering System</h1></p>
-
-    </div>
-
-
-    <div class="container">
-
-        <div class="stats">
-
-            <div class="card">
-
-                <h2 class="revenue">
-                    ₹{{ "%.2f"|format(total_revenue) }}
-                </h2>
-
-                <p>💰 Total Revenue</p>
-
-            </div>
-
-
-            <div class="card">
-
-                <h2 class="orders">
-                    {{ total_orders }}
-                </h2>
-
-                <p>📦 Total Orders</p>
-
-            </div>
-
-
-            <div class="card">
-
-                <h2 class="today">
-                    ₹{{ "%.2f"|format(todays_revenue) }}
-                </h2>
-
-                <p>📅 Today's Revenue</p>
-
-            </div>
-
-
-            <div class="card">
-
-                <h2 class="today">
-                    {{ todays_orders }}
-                </h2>
-
-                <p>🛒 Today's Orders</p>
-
-            </div>
-
+    <section class="stats">
+        <div class="stat-card">
+            <p>💰 Total Revenue</p>
+            <h2>₹{{ "%.2f"|format(total_revenue|default(0, true)|float) }}</h2>
         </div>
 
-
-        <div class="button-box">
-
-            <a href="/admin" class="button admin-button">
-                👨‍💼 Admin Dashboard
-            </a>
-
-            <a href="/admin/menu" class="button menu-button">
-                🍔 Manage Menu
-            </a>
-
+        <div class="stat-card">
+            <p>🧾 Total Orders</p>
+            <h2>{{ total_orders|default(0, true) }}</h2>
         </div>
 
-    </div>
+        <div class="stat-card">
+            <p>📅 Today's Revenue</p>
+            <h2 class="green">
+                ₹{{ "%.2f"|format(today_revenue|default(0, true)|float) }}
+            </h2>
+        </div>
 
+        <div class="stat-card">
+            <p>🛒 Today's Orders</p>
+            <h2>{{ today_orders|default(0, true) }}</h2>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>📋 Order Sales Details</h2>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Token</th>
+                        <th>Student Email</th>
+                        <th>Food Item</th>
+                        <th>Quantity</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                        <th>Order Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>#{{ order[0] }}</td>
+                        <td>{{ order[1] }}</td>
+                        <td>{{ order[2] }}</td>
+                        <td>{{ order[3] }}</td>
+                        <td>{{ order[5] }}</td>
+                        <td class="amount">
+                            ₹{{ "%.2f"|format(order[6]|float) }}
+                        </td>
+                        <td><span class="status">{{ order[7] }}</span></td>
+                        <td>{{ order[8] }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="empty">
+                            No sales records found yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <p class="note">
+            Sales figures depend on the data returned by your Flask application.
+        </p>
+    </section>
+</main>
+
+<footer>© 2026 Smart Canteen Management System</footer>
 </body>
-
 </html>
+```

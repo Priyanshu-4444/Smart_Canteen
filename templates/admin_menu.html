@@ -1,261 +1,391 @@
+```html
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
-    <title>Menu Management</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Menu | Smart Canteen</title>
 
     <style>
-
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
         }
 
-        .header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 25px;
-            text-align: center;
+        body {
+            background: #fff8f0;
+            color: #38291f;
+        }
+
+        header {
+            background: #ffffff;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            border-bottom: 1px solid #f0dfd0;
+        }
+
+        .logo {
+            color: #e86c24;
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        nav {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #554438;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        nav a:hover, nav a.active {
+            color: #e86c24;
         }
 
         .container {
-            width: 95%;
-            max-width: 1100px;
-            margin: 30px auto;
+            max-width: 1150px;
+            margin: 35px auto;
+            padding: 0 20px;
         }
 
-        .top-buttons {
-            margin-bottom: 20px;
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
-        .button {
+        h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #806f61;
+            font-size: 14px;
+        }
+
+        .btn {
             display: inline-block;
-            padding: 12px 18px;
-            background-color: #27ae60;
+            border: none;
+            border-radius: 8px;
+            padding: 11px 16px;
+            background: #e86c24;
             color: white;
             text-decoration: none;
-            border-radius: 5px;
-            margin-right: 10px;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
         }
 
-        .dashboard {
-            background-color: #3498db;
+        .btn:hover {
+            background: #c95312;
         }
 
-        .table-box {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card, .panel {
+            background: white;
+            border: 1px solid #f0e1d4;
+            border-radius: 13px;
+            padding: 22px;
+            box-shadow: 0 4px 15px rgba(85, 55, 30, 0.04);
+        }
+
+        .stat-card p {
+            color: #806f61;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card h2 {
+            font-size: 27px;
+            color: #e86c24;
+        }
+
+        .panel {
+            margin-bottom: 25px;
+        }
+
+        .panel h2 {
+            font-size: 20px;
+            margin-bottom: 18px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e6d6c8;
+            border-radius: 8px;
+            background: #fffdfa;
+            color: #38291f;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus {
+            outline: 2px solid #f5bd94;
+            border-color: #e86c24;
+        }
+
+        .form-actions {
+            margin-top: 15px;
+        }
+
+        .table-wrap {
             overflow-x: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 650px;
         }
 
         th {
-            background-color: #34495e;
-            color: white;
-            padding: 12px;
+            text-align: left;
+            background: #fff1e4;
+            color: #74513b;
+            padding: 14px;
+            font-size: 13px;
         }
 
         td {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
+            padding: 14px;
+            border-bottom: 1px solid #f1e6dc;
+            font-size: 14px;
+        }
+
+        tr:hover td {
+            background: #fffaf5;
+        }
+
+        .category {
+            display: inline-block;
+            padding: 6px 9px;
+            border-radius: 20px;
+            background: #fff0e2;
+            color: #bd591e;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .price {
+            color: #287b45;
+            font-weight: bold;
+        }
+
+        .status {
+            font-size: 12px;
+            font-weight: bold;
         }
 
         .available {
-            color: green;
-            font-weight: bold;
+            color: #21864b;
         }
 
         .unavailable {
-            color: red;
-            font-weight: bold;
+            color: #c23b32;
         }
 
-    </style>
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
 
+        .edit-btn {
+            background: #fff0e2;
+            color: #bd591e;
+        }
+
+        .delete-btn {
+            background: #fde9e7;
+            color: #b52e2e;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #806f61;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #8c7a6c;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                align-items: flex-start;
+            }
+
+            nav {
+                gap: 12px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .container {
+                margin-top: 25px;
+            }
+        }
+    </style>
 </head>
 
 <body>
+<header>
+    <div class="logo">🍔 Smart Canteen</div>
+    <nav>
+        <a href="{{ url_for('admin') }}">Dashboard</a>
+        <a href="{{ url_for('admin_menu') }}" class="active">Manage Menu</a>
+        <a href="{{ url_for('sales_report') }}">Sales Report</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+</header>
 
-    <div class="header">
-
-        <h1>🍔 Smart Canteen</h1>
-
-        <h2>⚙️ Menu Management</h2>
-
+<main class="container">
+    <div class="page-heading">
+        <div>
+            <h1>🍽️ Manage Menu</h1>
+            <p class="subtitle">Add, edit and manage your canteen food items.</p>
+        </div>
+        <a href="#add-food" class="btn">＋ Add New Food</a>
     </div>
 
-
-    <div class="container">
-
-        <div class="top-buttons">
-
-            <a href="/add_menu" class="button">
-                ➕ Add Food Item
-            </a>
-
-            <a href="/admin" class="button dashboard">
-                ← Admin Dashboard
-            </a>
-
+    <section class="stats">
+        <div class="stat-card">
+            <p>Total Menu Items</p>
+            <h2>{{ items|length }}</h2>
         </div>
+        <div class="stat-card">
+            <p>Available Items</p>
+            <h2>{{ items|selectattr('5', 'equalto', 1)|list|length }}</h2>
+        </div>
+        <div class="stat-card">
+            <p>Food Categories</p>
+            <h2>{{ items|map(attribute='3')|unique|list|length }}</h2>
+        </div>
+    </section>
 
+    <section class="panel" id="add-food">
+        <h2>➕ Add New Food Item</h2>
 
-        <div class="table-box">
+        <form method="POST" action="{{ url_for('add_menu') }}">
+            <div class="form-grid">
+                <input type="text" name="item_name"
+                       placeholder="Food item name" required>
 
-            <h2>🍽️ All Menu Items</h2>
+                <input type="number" name="price"
+                       placeholder="Price (₹)" min="1" step="0.01" required>
 
+                <select name="category" required>
+                    <option value="">Select Category</option>
+                    <option value="South Indian">🍛 South Indian</option>
+                    <option value="Snacks">🥪 Snacks</option>
+                    <option value="Beverage">☕ Beverage</option>
+                    <option value="Lunch">🍱 Lunch</option>
+                    <option value="Fast Food">🍔 Fast Food</option>
+                    <option value="Dessert">🍰 Dessert</option>
+                </select>
+
+                <select name="availability" required>
+                    <option value="1">Available</option>
+                    <option value="0">Unavailable</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn">Add Food Item</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>📋 Current Menu Items</h2>
+
+        <div class="table-wrap">
             <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Food Item</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>#{{ item[0] }}</td>
+                        <td><strong>{{ item[1] }}</strong></td>
+                        <td><span class="category">{{ item[3] }}</span></td>
+                        <td class="price">₹{{ "%.2f"|format(item[2]|float) }}</td>
+                        <td>
+                            {% if item[5]|string == '1' or item[5]|string|lower == 'available' %}
+                                <span class="status available">● Available</span>
+                            {% else %}
+                                <span class="status unavailable">● Unavailable</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <a href="{{ url_for('edit_menu', item_id=item[0]) }}"
+                                   class="btn edit-btn">Edit</a>
 
-                <tr>
-
-                    <th>ID</th>
-
-                    <th>Food Item</th>
-
-                    <th>Price</th>
-
-                    <th>Category</th>
-
-                    <th>Availability</th>
-
-                    <th>Actions</th>
-
-                </tr>
-
-
-                {% for item in items %}
-
-                <tr>
-
-                    <td>
-                        {{ item[0] }}
-                    </td>
-
-                    <td>
-                        {{ item[1] }}
-                    </td>
-
-                    <td>
-                        ₹{{ item[2] }}
-                    </td>
-<td>
-
-    {% if item[3] == "South Indian" %}
-
-        🍛 South Indian
-
-    {% elif item[3] == "Snacks" %}
-
-        🥪 Snacks & Chaat
-
-    {% elif item[3] == "Beverage" %}
-
-        🥤 Beverages
-
-    {% elif item[3] == "Lunch" %}
-
-        🍱 Lunch & Thali
-
-    {% elif item[3] == "Fast Food" %}
-
-        🍜 Chinese & Fast Food
-
-    {% elif item[3] == "Dessert" %}
-
-        🍰 Desserts & Bakery
-
-    {% else %}
-
-        {{ item[3] }}
-
-    {% endif %}
-
-</td>
-
-                    <td>
-
-                        {% if item[4] == "Available" %}
-
-                            <span class="available">
-                                ✅ Available
-                            </span>
-
-                        {% else %}
-
-                            <span class="unavailable">
-                                ❌ Unavailable
-                            </span>
-
-                        {% endif %}
-
-                    </td>
-
-                    <td>
-
-                        <a href="/edit_menu/{{ item[0] }}">
-    <button type="button">
-        ✏️ Edit
-    </button>
-</a>
-
-
-<form
-    method="POST"
-    action="/toggle_menu/{{ item[0] }}"
-    style="display:inline;"
->
-
-    {% if item[4] == "Available" %}
-
-        <button type="submit">
-            ❌ Make Unavailable
-        </button>
-
-    {% else %}
-
-        <button type="submit">
-            ✅ Make Available
-        </button>
-
-    {% endif %}
-
-</form>
-
-
-<form
-    method="POST"
-    action="/delete_menu/{{ item[0] }}"
-    style="display:inline;"
-    onsubmit="return confirm('Are you sure you want to delete this item?');"
->
-
-    <button type="submit">
-        🗑️ Delete
-    </button>
-
-</form>
-
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
+                                <form method="POST"
+                                      action="{{ url_for('delete_menu', item_id=item[0]) }}"
+                                      onsubmit="return confirm('Are you sure you want to delete this food item?');">
+                                    <button type="submit" class="btn delete-btn">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="empty">
+                            No food items found. Add your first item above.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
             </table>
-
         </div>
+    </section>
+</main>
 
-    </div>
-
+<footer>© 2026 Smart Canteen Management System</footer>
 </body>
-
 </html>
+```
