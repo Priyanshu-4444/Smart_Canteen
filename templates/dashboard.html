@@ -1,250 +1,247 @@
+
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
-    <title>Student Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | Smart Canteen</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
+            background: #fff8ef;
+            color: #35251d;
         }
 
         .header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 25px;
-            text-align: center;
+            background: #fff;
+            padding: 18px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 1px solid #f0dfce;
+        }
+
+        .brand {
+            color: #d96325;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .header a {
+            color: #d96325;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #fff0df, #ffe0bf);
+            padding: 35px 5%;
+        }
+
+        .hero h1 {
+            margin: 0 0 10px;
+            font-size: clamp(25px, 5vw, 36px);
+        }
+
+        .hero p {
+            color: #765847;
+            margin-bottom: 0;
         }
 
         .container {
             width: 90%;
-            max-width: 1000px;
-            margin: 30px auto;
+            max-width: 1050px;
+            margin: 28px auto;
+        }
+
+        .welcome, .card, .actions {
+            background: #fff;
+            border: 1px solid #f0dfce;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 5px 18px rgba(100, 55, 20, 0.06);
         }
 
         .welcome {
-            background-color: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 25px;
+            margin-bottom: 22px;
+        }
+
+        .welcome h2 {
+            margin-top: 0;
+        }
+
+        .welcome p {
+            overflow-wrap: anywhere;
         }
 
         .cards {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-bottom: 25px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 22px;
         }
 
         .card {
-    display: block;
-    background-color: white;
-    padding: 25px;
-    text-align: center;
-    border-radius: 10px;
-    border: 2px solid #ddd;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    text-decoration: none;
-    color: inherit;
-    box-sizing: border-box;
-}
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: #e7a16e;
+        }
+
+        .card .emoji {
+            font-size: 36px;
         }
 
         .card h2 {
-            font-size: 30px;
-            margin: 10px;
+            color: #d96325;
+            margin: 10px 0;
+            font-size: 28px;
         }
 
         .card p {
+            color: #765847;
             font-weight: bold;
-            color: #555;
+            margin-bottom: 0;
         }
 
-        .orders {
-            color: #3498db;
-        }
-
-        .menu {
-            color: #27ae60;
-        }
-
-        .account {
-            color: #9b59b6;
-        }
-
-        .buttons {
-            background-color: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            text-align: center;
+        .actions h2 {
+            margin-top: 0;
         }
 
         .button {
             display: inline-block;
-            padding: 14px 25px;
-            color: white;
+            margin: 6px 5px 6px 0;
+            padding: 13px 18px;
+            border-radius: 9px;
             text-decoration: none;
-            border-radius: 5px;
-            margin: 8px;
             font-weight: bold;
         }
 
-        .menu-button {
-            background-color: #27ae60;
+        .primary {
+            background: #e96d2c;
+            color: white;
         }
 
-        .order-button {
-            background-color: #3498db;
+        .secondary {
+            background: #fff0df;
+            color: #a94717;
+            border: 1px solid #f0c9a8;
         }
 
         .logout {
-            background-color: #e74c3c;
+            background: #fff;
+            color: #a83225;
+            border: 1px solid #e8b5ae;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #8c7464;
+            font-size: 13px;
         }
 
         @media (max-width: 700px) {
+            .header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
 
             .cards {
                 grid-template-columns: 1fr;
             }
 
+            .hero {
+                padding: 28px 5%;
+            }
+
+            .container {
+                width: 92%;
+            }
         }
-
     </style>
-
 </head>
-
 
 <body>
 
+    <header class="header">
+        <div class="brand">🍔 Smart Canteen</div>
+        <a href="/logout">🚪 Logout</a>
+    </header>
 
-    <div class="header">
+    <section class="hero">
+        <h1>Welcome back, {{ name }}! 👋</h1>
+        <p>Your campus food, made simple and convenient.</p>
+    </section>
 
-        <h1>🍔 Smart Canteen Food Ordering System</h1>
+    <main class="container">
 
-        <h2>🎓 Student Dashboard</h2>
+        <section class="welcome">
+            <h2>🎓 Student Dashboard</h2>
+            <p><strong>Email:</strong> {{ email }}</p>
+            <p><strong>Role:</strong> {{ role }}</p>
+        </section>
 
-    </div>
+        <section class="cards">
 
+            <a href="/my_orders" class="card">
+                <div class="emoji">📦</div>
+                <h2>{{ total_orders }}</h2>
+                <p>My Total Orders</p>
+            </a>
 
-    <div class="container">
+            <a href="/menu" class="card">
+                <div class="emoji">🍛</div>
+                <h2>Explore</h2>
+                <p>Canteen Menu</p>
+            </a>
 
+            <a href="/cart" class="card">
+                <div class="emoji">🛒</div>
+                <h2>My Cart</h2>
+                <p>View Selected Items</p>
+            </a>
 
-        <!-- WELCOME -->
+        </section>
 
-        <div class="welcome">
-
-            <h2>
-                👋 Welcome, {{ name }}!
-            </h2>
-
-            <p>
-                <strong>Email:</strong>
-                {{ email }}
-            </p>
-
-            <p>
-                <strong>Role:</strong>
-                {{ role }}
-            </p>
-
-        </div>
-
-
-        <!-- DASHBOARD CARDS -->
-
-        <a href="/my_orders" class="card">
-
-    <div class="orders">
-
-        <h2>
-            📦 {{ total_orders }}
-        </h2>
-
-    </div>
-
-    <p>
-        My Total Orders
-    </p>
-
-</a>
-
-<a href="/menu" class="card">
-
-    <div class="menu">
-
-        <h2>
-            🍔
-        </h2>
-
-    </div>
-
-    <p>
-        Canteen Menu
-    </p>
-
-</a>
-            </div>
-
-
-            <a href="/dashboard" class="card">
-
-    <div class="account">
-
-        <h2>
-            👤
-        </h2>
-
-    </div>
-
-    <p>
-        Student Account
-    </p>
-
-</a>
-
-        
-        <!-- BUTTONS -->
-
-        <div class="buttons">
-
+        <section class="actions">
             <h2>What would you like to do?</h2>
 
-
-            <a
-                href="/menu"
-                class="button menu-button"
-            >
-                🍔 View Menu
+            <a href="/menu" class="button primary">
+                🍔 Browse Food Menu
             </a>
 
-
-            <a
-                href="/my_orders"
-                class="button order-button"
-            >
-                📋 My Orders
+            <a href="/my_orders" class="button secondary">
+                📋 Track My Orders
             </a>
 
+            <a href="/cart" class="button secondary">
+                🛒 Open Cart
+            </a>
 
-            <a
-                href="/logout"
-                class="button logout"
-            >
+            <a href="/logout" class="button logout">
                 🚪 Logout
             </a>
+        </section>
 
-        </div>
+    </main>
 
-
-    </div>
-
+    <footer class="footer">
+        Smart Canteen Food Ordering System
+    </footer>
 
 </body>
-
 </html>
